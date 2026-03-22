@@ -3,1243 +3,857 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="theme-color" content="#1a3a2a">
+<meta name="theme-color" content="#0d1f17">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="description" content="Explorez Madère — guide de voyage nature hors ligne">
 <title>Madeira Wild</title>
 <link rel="manifest" href="manifest.json">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,700;1,300;1,500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --green-deep: #0f2318;
-    --green-dark: #1a3a2a;
-    --green-mid: #2d6a4f;
-    --green-light: #52b788;
-    --green-pale: #b7e4c7;
-    --cream: #f4f0e6;
-    --cream-dark: #e8e2d4;
-    --gold: #d4a843;
-    --coral: #e07a5f;
-    --blue-ocean: #2196a6;
-    --text-dark: #1a1a1a;
-    --text-mid: #4a4a4a;
-    --text-light: #888;
-    --radius: 16px;
-    --nav-h: 68px;
-  }
+:root {
+  --ink:#0d1f17; --forest:#1a3a2a; --moss:#2d6a4f; --fern:#52b788;
+  --mint:#95d5b2; --dew:#d8f3dc; --cream:#f5f0e8; --parchment:#ede8dc;
+  --gold:#c9982a; --amber:#e8b84b; --coral:#d4614a; --sky:#2196a6;
+  --r:14px; --nav:72px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);min-height:100dvh;overflow-x:hidden;}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+/* NAV */
+.bnav{position:fixed;bottom:0;left:0;right:0;z-index:200;height:var(--nav);background:var(--ink);display:flex;padding-bottom:env(safe-area-inset-bottom);border-top:1px solid rgba(255,255,255,0.06);}
+.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;cursor:pointer;color:rgba(255,255,255,0.35);transition:color 0.2s;padding:8px 2px;position:relative;}
+.bnav-btn.on{color:var(--fern);}
+.bnav-btn svg{width:21px;height:21px;}
+.bnav-label{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.6px;}
+.bnav-xp{position:absolute;top:6px;right:calc(50% - 18px);background:var(--amber);color:var(--ink);font-size:9px;font-weight:800;min-width:16px;height:16px;border-radius:8px;padding:0 4px;display:flex;align-items:center;justify-content:center;}
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--cream);
-    color: var(--text-dark);
-    min-height: 100dvh;
-    overflow-x: hidden;
-  }
+/* PAGES */
+.page{display:none;min-height:100dvh;padding-bottom:calc(var(--nav)+20px);}
+.page.on{display:block;}
 
-  /* NAV BOTTOM */
-  .bottom-nav {
-    position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
-    height: var(--nav-h);
-    background: var(--green-deep);
-    display: flex; align-items: stretch;
-    border-top: 1px solid rgba(255,255,255,0.08);
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-  .nav-item {
-    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 4px; cursor: pointer; padding: 8px 4px;
-    transition: all 0.2s;
-    border: none; background: none; color: rgba(255,255,255,0.45);
-  }
-  .nav-item.active { color: var(--green-light); }
-  .nav-item svg { width: 22px; height: 22px; }
-  .nav-label { font-size: 10px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; }
+/* HERO */
+.hero{position:relative;overflow:hidden;background:var(--ink);height:56vh;min-height:300px;display:flex;flex-direction:column;justify-content:flex-end;padding:0 20px 28px;}
+.hero-photo{position:absolute;inset:0;background-size:cover;background-position:center;}
+.hero-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(13,31,23,0.15) 0%,rgba(13,31,23,0.88) 100%);}
+.hero-wave{position:absolute;bottom:-1px;left:0;right:0;}
+.hero-content{position:relative;z-index:1;}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.15);border-radius:20px;padding:4px 12px;font-size:11px;color:var(--mint);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:10px;}
+.hero h1{font-family:'Fraunces',serif;font-size:clamp(34px,9vw,52px);color:#fff;line-height:1.05;}
+.hero h1 em{font-style:italic;color:var(--mint);}
+.hero-sub{font-size:13px;color:rgba(255,255,255,0.5);margin-top:6px;font-weight:300;}
 
-  /* PAGES */
-  .page {
-    display: none; min-height: 100dvh;
-    padding-bottom: calc(var(--nav-h) + 16px);
-  }
-  .page.active { display: block; }
+/* XP WIDGET */
+.xp-widget{position:absolute;top:16px;left:16px;right:16px;z-index:2;display:flex;align-items:center;gap:10px;}
+.xp-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--moss),var(--fern));border:2px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.xp-info{flex:1;}
+.xp-rank{font-size:10px;font-weight:700;color:var(--amber);letter-spacing:1px;text-transform:uppercase;}
+.xp-bar-wrap{height:5px;background:rgba(255,255,255,0.15);border-radius:3px;margin-top:3px;overflow:hidden;}
+.xp-bar{height:100%;background:linear-gradient(90deg,var(--amber),var(--fern));border-radius:3px;transition:width 0.6s ease;}
+.xp-pts{font-size:11px;color:rgba(255,255,255,0.6);margin-top:2px;}
+.streak-pill{background:rgba(232,184,75,0.15);border:1px solid rgba(232,184,75,0.3);border-radius:10px;padding:6px 10px;display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.streak-num{font-size:18px;font-weight:800;color:var(--amber);line-height:1;}
+.streak-label{font-size:9px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.5px;}
 
-  /* HERO */
-  .hero {
-    position: relative; height: 55vh; min-height: 320px;
-    background: linear-gradient(160deg, var(--green-deep) 0%, var(--green-mid) 60%, #3d8b68 100%);
-    overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end;
-    padding: 28px 24px;
-  }
-  .hero-bg {
-    position: absolute; inset: 0; opacity: 0.15;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cellipse cx='100' cy='120' rx='90' ry='70' fill='%2352b788' opacity='0.4'/%3E%3Cellipse cx='30' cy='50' rx='40' ry='55' fill='%2352b788' opacity='0.3'/%3E%3Cellipse cx='170' cy='40' rx='35' ry='50' fill='%2552b788' opacity='0.25'/%3E%3C/svg%3E");
-    background-size: 300px;
-  }
-  .hero-wave {
-    position: absolute; bottom: -1px; left: 0; right: 0;
-  }
-  .hero-tag {
-    display: inline-block; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px);
-    border: 1px solid rgba(255,255,255,0.2); border-radius: 20px;
-    padding: 4px 14px; font-size: 11px; color: var(--green-pale);
-    letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px;
-    width: fit-content;
-  }
-  .hero h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(34px, 9vw, 52px);
-    color: var(--cream); line-height: 1.05;
-    text-shadow: 0 4px 24px rgba(0,0,0,0.3);
-  }
-  .hero h1 em { font-style: italic; color: var(--green-light); }
-  .hero-sub {
-    margin-top: 8px; color: rgba(255,255,255,0.65);
-    font-size: 14px; font-weight: 300;
-  }
-  .weather-pill {
-    position: absolute; top: 20px; right: 20px;
-    background: rgba(255,255,255,0.12); backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,0.2); border-radius: 12px;
-    padding: 10px 14px; text-align: right; color: white;
-  }
-  .weather-temp { font-size: 26px; font-weight: 700; line-height: 1; }
-  .weather-desc { font-size: 11px; opacity: 0.7; margin-top: 2px; }
+/* SECTION */
+.sec{padding:20px 16px 0;}
+.sec-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;}
+.sec-title{font-family:'Fraunces',serif;font-size:22px;color:var(--ink);}
+.sec-link{font-size:13px;color:var(--moss);font-weight:600;cursor:pointer;}
+.hscroll{display:flex;gap:12px;overflow-x:auto;padding:0 16px 8px;margin:0 -16px;scrollbar-width:none;}
+.hscroll::-webkit-scrollbar{display:none;}
 
-  /* SECTIONS */
-  .section { padding: 20px 16px 0; }
-  .section-header {
-    display: flex; justify-content: space-between; align-items: baseline;
-    margin-bottom: 14px;
-  }
-  .section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 22px; color: var(--green-deep);
-  }
-  .section-link { font-size: 13px; color: var(--green-mid); text-decoration: none; font-weight: 500; }
+/* SITE CARDS */
+.site-card{flex-shrink:0;width:200px;border-radius:var(--r);overflow:hidden;cursor:pointer;position:relative;box-shadow:0 4px 24px rgba(0,0,0,0.14);background:var(--forest);transition:transform 0.2s;}
+.site-card:active{transform:scale(0.97);}
+.site-card-photo{height:150px;background-size:cover;background-position:center;position:relative;}
+.site-card-photo::after{content:'';position:absolute;inset:0;background:linear-gradient(transparent 35%,rgba(13,31,23,0.8));}
+.site-card-overlay{position:absolute;bottom:0;left:0;right:0;padding:10px 12px;z-index:1;}
+.site-card-name{font-size:14px;font-weight:700;color:#fff;line-height:1.2;}
+.site-card-sub{font-size:11px;color:rgba(255,255,255,0.65);margin-top:2px;}
+.site-card-xp{position:absolute;top:8px;right:8px;z-index:2;background:var(--amber);color:var(--ink);font-size:10px;font-weight:800;padding:3px 8px;border-radius:8px;}
 
-  /* CARDS SCROLL */
-  .cards-scroll {
-    display: flex; gap: 12px; overflow-x: auto;
-    padding: 0 16px 8px; margin: 0 -16px;
-    scrollbar-width: none;
-  }
-  .cards-scroll::-webkit-scrollbar { display: none; }
+/* QUESTS */
+.quest-item{background:#fff;border-radius:var(--r);padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 12px rgba(0,0,0,0.06);cursor:pointer;transition:transform 0.15s;position:relative;overflow:hidden;}
+.quest-item.done{opacity:0.5;}
+.quest-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;}
+.quest-item.q-easy::before{background:var(--fern);}
+.quest-item.q-med::before{background:var(--amber);}
+.quest-item.q-hard::before{background:var(--coral);}
+.quest-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.quest-info{flex:1;min-width:0;}
+.quest-name{font-size:14px;font-weight:600;}
+.quest-desc{font-size:12px;color:#888;margin-top:2px;}
+.quest-pbar{height:4px;background:#eee;border-radius:2px;overflow:hidden;margin-top:6px;}
+.quest-pfill{height:100%;background:var(--fern);border-radius:2px;transition:width 0.4s;}
+.quest-reward{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:var(--gold);flex-shrink:0;}
 
-  .card {
-    flex-shrink: 0; width: 200px; border-radius: var(--radius);
-    overflow: hidden; cursor: pointer;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    transition: transform 0.2s, box-shadow 0.2s;
-    background: white;
-  }
-  .card:active { transform: scale(0.97); }
-  .card-img {
-    height: 130px; position: relative;
-    background: var(--green-mid);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 56px;
-    overflow: hidden;
-  }
-  .card-img::after {
-    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 50%;
-    background: linear-gradient(transparent, rgba(0,0,0,0.35));
-  }
-  .card-badge {
-    position: absolute; top: 8px; right: 8px; z-index: 1;
-    background: var(--gold); color: white;
-    font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
-    padding: 3px 8px; border-radius: 6px; text-transform: uppercase;
-  }
-  .card-body { padding: 12px; }
-  .card-name { font-size: 14px; font-weight: 600; color: var(--text-dark); line-height: 1.3; }
-  .card-meta { font-size: 12px; color: var(--text-light); margin-top: 4px; display: flex; align-items: center; gap: 6px; }
-  .card-meta span { display: flex; align-items: center; gap: 3px; }
+/* SPECIES */
+.species-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.spec-card{background:#fff;border-radius:var(--r);overflow:hidden;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.07);transition:transform 0.15s;position:relative;}
+.spec-card:active{transform:scale(0.97);}
+.spec-img{height:110px;background-size:cover;background-position:center;}
+.spec-img-emoji{height:110px;display:flex;align-items:center;justify-content:center;font-size:52px;}
+.spec-locked{position:absolute;inset:0;background:rgba(13,31,23,0.7);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.spec-body{padding:10px 12px 12px;}
+.spec-name{font-size:13px;font-weight:700;}
+.spec-latin{font-size:11px;color:#999;font-style:italic;margin-top:1px;}
+.spec-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px;margin-top:5px;text-transform:uppercase;letter-spacing:0.3px;}
+.tag-e{background:#d8f3dc;color:var(--moss);}
+.tag-r{background:#fff3cd;color:#856404;}
+.tag-c{background:#e8f4f8;color:var(--sky);}
+.spec-captured{position:absolute;top:8px;right:8px;background:var(--amber);color:var(--ink);font-size:10px;font-weight:800;padding:3px 8px;border-radius:8px;z-index:2;}
 
-  /* LEVADA TRAILS */
-  .trail-list { display: flex; flex-direction: column; gap: 10px; }
-  .trail-item {
-    background: white; border-radius: var(--radius);
-    padding: 14px 16px; display: flex; align-items: center; gap: 14px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.07); cursor: pointer;
-    transition: transform 0.15s;
-  }
-  .trail-item:active { transform: scale(0.98); }
-  .trail-icon {
-    width: 48px; height: 48px; border-radius: 12px;
-    background: var(--green-mid); color: white;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px; flex-shrink: 0;
-  }
-  .trail-info { flex: 1; min-width: 0; }
-  .trail-name { font-size: 15px; font-weight: 600; color: var(--text-dark); }
-  .trail-details { font-size: 12px; color: var(--text-light); margin-top: 3px; display: flex; gap: 10px; flex-wrap: wrap; }
-  .trail-details span { display: flex; align-items: center; gap: 3px; }
-  .difficulty {
-    font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 8px;
-    text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0;
-  }
-  .diff-easy { background: #d8f3dc; color: #2d6a4f; }
-  .diff-med { background: #fff3cd; color: #856404; }
-  .diff-hard { background: #fde8e4; color: #c0392b; }
+/* CAMERA */
+.capture-zone{background:var(--ink);border-radius:20px;overflow:hidden;position:relative;margin-bottom:16px;}
+.camera-preview{height:55vw;max-height:280px;background:var(--forest);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;position:relative;cursor:pointer;}
+.camera-preview video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.camera-preview canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;}
+.camera-frame{width:180px;height:140px;border:2px solid rgba(82,183,136,0.6);border-radius:12px;position:absolute;box-shadow:0 0 0 9999px rgba(0,0,0,0.3);}
+.cam-dots{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(82,183,136,0.2) 1px,transparent 1px);background-size:24px 24px;pointer-events:none;}
+.cam-hint{font-size:13px;color:rgba(255,255,255,0.5);z-index:1;}
+.cam-icon{font-size:40px;z-index:1;}
+.capture-controls{display:flex;align-items:center;justify-content:center;gap:20px;padding:16px 20px 20px;}
+.btn-capture{width:68px;height:68px;border-radius:50%;background:white;border:4px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform 0.15s;box-shadow:0 0 0 4px rgba(255,255,255,0.1);}
+.btn-capture:active{transform:scale(0.92);}
+.btn-capture-inner{width:52px;height:52px;border-radius:50%;background:white;}
+.btn-cam-action{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.1);border:1.5px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;cursor:pointer;color:white;font-size:18px;}
+.ai-detect-btn{width:calc(100% - 32px);margin:0 16px 16px;padding:13px;background:linear-gradient(135deg,var(--moss),var(--fern));border:none;border-radius:12px;color:white;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+.ai-detect-btn:disabled{opacity:0.5;cursor:default;}
 
-  /* MAP PLACEHOLDER */
-  .map-container {
-    background: var(--green-deep);
-    border-radius: var(--radius);
-    overflow: hidden;
-    position: relative;
-    height: 320px;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .map-svg {
-    width: 100%; height: 100%; opacity: 0.9;
-  }
-  .map-overlay {
-    position: absolute; inset: 0;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 8px; pointer-events: none;
-  }
-  .gps-btn {
-    position: absolute; bottom: 16px; right: 16px;
-    width: 44px; height: 44px; border-radius: 50%;
-    background: var(--green-light); border: none; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 4px 16px rgba(82,183,136,0.4);
-    color: white; pointer-events: all;
-    transition: transform 0.15s;
-  }
-  .gps-btn:active { transform: scale(0.92); }
+/* CAPTURES GRID */
+.captures-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;}
+.capture-thumb{aspect-ratio:1;background:var(--parchment);position:relative;overflow:hidden;cursor:pointer;}
+.capture-thumb img{width:100%;height:100%;object-fit:cover;}
+.capture-thumb-label{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.7));padding:8px 4px 4px;font-size:9px;color:white;font-weight:600;text-align:center;line-height:1.2;}
 
-  /* FULL MAP PAGE */
-  #page-map .map-container { height: calc(100dvh - var(--nav-h) - 120px); border-radius: var(--radius); }
+/* PROFIL */
+.profile-hero{background:linear-gradient(160deg,var(--ink) 0%,var(--forest) 100%);padding:30px 20px 24px;position:relative;overflow:hidden;}
+.profile-hero::before{content:'🌿';font-size:200px;position:absolute;right:-30px;top:-30px;opacity:0.04;line-height:1;}
+.profile-avatar-big{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--moss),var(--fern));border:3px solid rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:32px;margin-bottom:12px;}
+.profile-name{font-family:'Fraunces',serif;font-size:26px;color:white;}
+.profile-rank{font-size:13px;color:var(--amber);font-weight:600;margin-top:2px;}
+.stats-row{display:flex;gap:10px;margin-top:20px;}
+.stat-box{flex:1;background:rgba(255,255,255,0.06);border-radius:12px;padding:12px;text-align:center;border:1px solid rgba(255,255,255,0.08);}
+.stat-val{font-size:22px;font-weight:800;color:white;}
+.stat-lbl{font-size:10px;color:rgba(255,255,255,0.45);margin-top:2px;text-transform:uppercase;letter-spacing:0.5px;}
 
-  /* POI PINS */
-  .poi-filters {
-    display: flex; gap: 8px; overflow-x: auto; padding: 0 16px 0;
-    margin: 0 -16px 16px; scrollbar-width: none;
-  }
-  .poi-filters::-webkit-scrollbar { display: none; }
-  .filter-chip {
-    flex-shrink: 0; padding: 7px 14px; border-radius: 20px;
-    border: 1.5px solid var(--cream-dark); background: white;
-    font-size: 12px; font-weight: 500; cursor: pointer;
-    color: var(--text-mid); transition: all 0.15s;
-    white-space: nowrap;
-  }
-  .filter-chip.active {
-    background: var(--green-mid); border-color: var(--green-mid);
-    color: white;
-  }
+/* BADGES */
+.badges-grid{display:flex;gap:10px;flex-wrap:wrap;}
+.badge{width:72px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;}
+.badge-icon{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;border:2px solid transparent;}
+.badge.earned .badge-icon{border-color:var(--amber);background:var(--dew);}
+.badge.locked .badge-icon{background:#e8e8e8;filter:grayscale(1);opacity:0.5;}
+.badge-name{font-size:10px;text-align:center;font-weight:600;color:var(--ink);line-height:1.2;}
 
-  /* METEO PAGE */
-  .weather-card {
-    background: linear-gradient(135deg, var(--green-dark) 0%, var(--blue-ocean) 100%);
-    border-radius: 20px; padding: 24px; color: white; margin-bottom: 16px;
-  }
-  .weather-main { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-  .weather-big-temp { font-size: 64px; font-weight: 300; line-height: 1; }
-  .weather-icon { font-size: 64px; }
-  .weather-row { display: flex; gap: 16px; flex-wrap: wrap; }
-  .weather-stat {
-    flex: 1; min-width: 70px; background: rgba(255,255,255,0.1);
-    border-radius: 12px; padding: 12px; text-align: center;
-  }
-  .weather-stat-val { font-size: 18px; font-weight: 600; }
-  .weather-stat-label { font-size: 11px; opacity: 0.7; margin-top: 2px; }
-  .forecast-scroll { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
-  .forecast-scroll::-webkit-scrollbar { display: none; }
-  .forecast-day {
-    flex-shrink: 0; width: 72px; background: white;
-    border-radius: 14px; padding: 12px 8px; text-align: center;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
-  }
-  .forecast-day.today { background: var(--green-mid); color: white; }
-  .forecast-dow { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.7; }
-  .forecast-emoji { font-size: 24px; margin: 6px 0; }
-  .forecast-temp { font-size: 14px; font-weight: 600; }
+/* LEADERBOARD */
+.lb-item{background:#fff;border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:12px;margin-bottom:8px;box-shadow:0 1px 8px rgba(0,0,0,0.06);}
+.lb-rank{font-size:16px;font-weight:800;width:24px;text-align:center;}
+.lb-rank.gold{color:#c9982a;} .lb-rank.silver{color:#9aa0a6;} .lb-rank.bronze{color:#c07d52;}
+.lb-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.lb-name{flex:1;font-weight:600;font-size:14px;}
+.lb-xp{font-size:13px;font-weight:700;color:var(--amber);}
+.lb-me{background:linear-gradient(135deg,rgba(82,183,136,0.08),rgba(45,106,79,0.08));border:1.5px solid var(--fern);}
 
-  /* CARNET */
-  .memo-editor {
-    background: white; border-radius: var(--radius);
-    padding: 16px; margin-bottom: 12px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-  }
-  .memo-textarea {
-    width: 100%; border: none; outline: none; resize: none;
-    font-family: 'DM Sans', sans-serif; font-size: 15px;
-    color: var(--text-dark); min-height: 100px; line-height: 1.6;
-    background: transparent;
-  }
-  .memo-actions { display: flex; gap: 8px; margin-top: 10px; justify-content: flex-end; }
-  .btn { padding: 9px 18px; border-radius: 10px; border: none; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.15s; }
-  .btn-primary { background: var(--green-mid); color: white; }
-  .btn-primary:active { background: var(--green-deep); }
-  .btn-outline { background: transparent; border: 1.5px solid var(--green-mid); color: var(--green-mid); }
-  .note-item {
-    background: white; border-radius: var(--radius);
-    padding: 14px 16px; margin-bottom: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-    border-left: 3px solid var(--green-light);
-  }
-  .note-date { font-size: 11px; color: var(--text-light); margin-bottom: 4px; }
-  .note-text { font-size: 14px; line-height: 1.5; }
-  .note-del { float: right; background: none; border: none; color: var(--text-light); cursor: pointer; font-size: 16px; }
+/* FORECAST */
+.forecast-scroll{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+.forecast-scroll::-webkit-scrollbar{display:none;}
+.fc-day{flex-shrink:0;width:70px;background:#fff;border-radius:14px;padding:11px 8px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,0.07);}
+.fc-day.today{background:var(--moss);color:white;}
+.fc-dow{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;opacity:0.7;}
+.fc-emoji{font-size:22px;margin:5px 0;}
+.fc-temp{font-size:14px;font-weight:700;}
 
-  /* OFFLINE BANNER */
-  .offline-banner {
-    display: none; position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-    background: var(--coral); color: white; text-align: center;
-    padding: 10px 16px; font-size: 13px; font-weight: 600;
-  }
-  body.offline .offline-banner { display: block; }
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);align-items:flex-end;justify-content:center;}
+.modal-bg.on{display:flex;}
+.modal-sheet{background:var(--cream);border-radius:24px 24px 0 0;width:100%;max-width:580px;max-height:92dvh;overflow-y:auto;padding:24px 20px 36px;position:relative;animation:slideUp 0.28s ease;}
+@keyframes slideUp{from{transform:translateY(50px);opacity:0;}}
+.modal-grip{width:36px;height:4px;background:var(--parchment);border-radius:2px;margin:0 auto 20px;}
+.modal-close{position:absolute;top:18px;right:18px;width:30px;height:30px;border-radius:50%;background:var(--parchment);border:none;cursor:pointer;font-size:14px;color:#666;display:flex;align-items:center;justify-content:center;}
+.modal-title{font-family:'Fraunces',serif;font-size:26px;color:var(--ink);margin-bottom:4px;}
+.modal-sub{font-size:13px;color:#888;margin-bottom:20px;}
+.info-pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+.info-pill{background:#fff;border-radius:10px;padding:8px 12px;box-shadow:0 1px 6px rgba(0,0,0,0.07);}
+.info-pill-label{font-size:10px;color:#999;text-transform:uppercase;letter-spacing:0.4px;}
+.info-pill-val{font-size:14px;font-weight:700;color:var(--ink);margin-top:1px;}
+.modal-desc{font-size:14px;line-height:1.75;color:#555;margin-bottom:18px;}
+.tips{list-style:none;display:flex;flex-direction:column;gap:6px;}
+.tips li{background:#fff;border-radius:10px;padding:9px 13px;font-size:13px;color:#555;display:flex;gap:8px;}
+.xp-banner{background:linear-gradient(135deg,var(--ink),var(--forest));border-radius:14px;padding:14px 18px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;color:white;}
+.xp-banner-txt{font-size:13px;opacity:0.7;}
+.xp-banner-val{font-size:22px;font-weight:800;color:var(--amber);}
 
-  /* MODAL */
-  .modal-overlay {
-    display: none; position: fixed; inset: 0; z-index: 300;
-    background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
-    padding: 20px 16px; overflow-y: auto;
-    align-items: flex-end;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--cream); border-radius: 24px 24px 0 0;
-    width: 100%; max-width: 600px; margin: auto auto 0;
-    padding: 28px 20px 32px;
-    animation: slideUp 0.3s ease;
-    max-height: 90dvh; overflow-y: auto;
-  }
-  @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-  .modal-handle {
-    width: 36px; height: 4px; background: var(--cream-dark);
-    border-radius: 2px; margin: 0 auto 20px;
-  }
-  .modal-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 24px; color: var(--green-deep); margin-bottom: 6px;
-  }
-  .modal-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 20px; }
-  .modal-emoji { font-size: 48px; margin-bottom: 12px; display: block; }
-  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-  .info-cell {
-    background: white; border-radius: 12px; padding: 12px;
-  }
-  .info-cell-label { font-size: 11px; color: var(--text-light); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .info-cell-val { font-size: 15px; font-weight: 600; color: var(--text-dark); }
-  .modal-desc { font-size: 14px; line-height: 1.7; color: var(--text-mid); margin-bottom: 20px; }
-  .tips-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-  .tips-list li {
-    background: white; border-radius: 10px; padding: 10px 14px;
-    font-size: 13px; color: var(--text-mid); display: flex; gap: 10px; align-items: flex-start;
-  }
-  .tips-list li::before { content: ''; flex-shrink: 0; }
-  .close-modal {
-    position: absolute; top: 20px; right: 20px;
-    width: 32px; height: 32px; border-radius: 50%;
-    background: var(--cream-dark); border: none; cursor: pointer;
-    font-size: 16px; color: var(--text-mid);
-    display: flex; align-items: center; justify-content: center;
-  }
+/* TOAST */
+.toast{position:fixed;top:16px;left:16px;right:16px;z-index:999;background:var(--ink);color:white;border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 8px 30px rgba(0,0,0,0.3);transform:translateY(-80px);transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);pointer-events:none;}
+.toast.show{transform:translateY(0);}
+.toast-emoji{font-size:28px;flex-shrink:0;}
+.toast-title{font-weight:700;font-size:15px;}
+.toast-sub{font-size:12px;opacity:0.65;}
 
-  /* FAUNE & FLORE */
-  .species-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .species-card {
-    background: white; border-radius: var(--radius);
-    overflow: hidden; cursor: pointer;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-    transition: transform 0.15s;
-  }
-  .species-card:active { transform: scale(0.97); }
-  .species-img {
-    height: 100px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 48px;
-  }
-  .species-body { padding: 10px 12px; }
-  .species-name { font-size: 13px; font-weight: 600; }
-  .species-latin { font-size: 11px; color: var(--text-light); font-style: italic; }
-  .species-tag {
-    display: inline-block; font-size: 10px; font-weight: 600;
-    padding: 2px 8px; border-radius: 6px; margin-top: 4px;
-    text-transform: uppercase; letter-spacing: 0.3px;
-  }
-  .tag-endemic { background: #fde8e4; color: var(--coral); }
-  .tag-rare { background: #fff3cd; color: #856404; }
-  .tag-common { background: #d8f3dc; color: var(--green-mid); }
+/* LEVEL UP */
+.levelup-overlay{display:none;position:fixed;inset:0;z-index:900;background:rgba(13,31,23,0.93);backdrop-filter:blur(8px);align-items:center;justify-content:center;flex-direction:column;gap:16px;}
+.levelup-overlay.show{display:flex;}
+.levelup-stars{font-size:60px;animation:spinBounce 0.8s ease;}
+@keyframes spinBounce{0%{transform:scale(0) rotate(-180deg);}70%{transform:scale(1.2) rotate(10deg);}100%{transform:scale(1) rotate(0);}}
+.levelup-title{font-family:'Fraunces',serif;font-size:40px;color:white;text-align:center;}
+.levelup-rank{font-size:18px;color:var(--amber);font-weight:700;}
+.levelup-close{background:var(--fern);color:white;border:none;border-radius:12px;padding:14px 32px;font-size:15px;font-weight:700;cursor:pointer;margin-top:10px;}
 
-  /* URGENCES */
-  .urgence-card {
-    background: white; border-radius: var(--radius);
-    padding: 16px; margin-bottom: 10px;
-    display: flex; align-items: center; gap: 14px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
-  }
-  .urgence-icon {
-    width: 48px; height: 48px; border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px; flex-shrink: 0;
-  }
-  .urg-red { background: #fde8e4; }
-  .urg-blue { background: #e0f3f8; }
-  .urg-orange { background: #fff3cd; }
-  .urg-green { background: #d8f3dc; }
-  .urgence-name { font-size: 15px; font-weight: 600; }
-  .urgence-num { font-size: 20px; font-weight: 700; color: var(--green-mid); letter-spacing: 1px; }
-  .call-btn {
-    margin-left: auto; width: 40px; height: 40px; border-radius: 50%;
-    background: var(--green-light); border: none; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0;
-  }
+/* PAGE HEADER */
+.page-hdr{padding:20px 16px 0;margin-bottom:16px;}
+.page-hdr h2{font-family:'Fraunces',serif;font-size:28px;color:var(--ink);}
+.page-hdr p{font-size:13px;color:#888;margin-top:3px;}
 
-  /* PAGE HEADERS */
-  .page-header {
-    padding: 20px 16px 0;
-    margin-bottom: 20px;
-  }
-  .page-header h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 28px; color: var(--green-deep);
-  }
-  .page-header p { font-size: 14px; color: var(--text-light); margin-top: 4px; }
+/* OFFLINE */
+.offline-bar{display:none;background:var(--coral);color:white;text-align:center;padding:9px 16px;font-size:12px;font-weight:700;position:fixed;top:0;left:0;right:0;z-index:300;}
+body.offline .offline-bar{display:block;}
 
-  /* CHECKLIST */
-  .check-section { margin-bottom: 20px; }
-  .check-title { font-size: 14px; font-weight: 700; color: var(--text-mid); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
-  .check-item {
-    display: flex; align-items: center; gap: 12px;
-    background: white; border-radius: 10px; padding: 12px 14px;
-    margin-bottom: 8px; cursor: pointer;
-    box-shadow: 0 1px 6px rgba(0,0,0,0.05);
-    transition: opacity 0.2s;
-  }
-  .check-item.done { opacity: 0.5; }
-  .check-box {
-    width: 22px; height: 22px; border-radius: 6px;
-    border: 2px solid var(--green-mid); flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.15s;
-  }
-  .check-item.done .check-box { background: var(--green-mid); border-color: var(--green-mid); }
-  .check-box::after { content: '✓'; color: white; font-size: 13px; opacity: 0; transition: opacity 0.15s; }
-  .check-item.done .check-box::after { opacity: 1; }
-  .check-label { font-size: 14px; }
-  .check-item.done .check-label { text-decoration: line-through; color: var(--text-light); }
-
-  /* INSTALL BANNER */
-  .install-banner {
-    display: none; position: fixed; bottom: calc(var(--nav-h) + 12px); left: 12px; right: 12px; z-index: 150;
-    background: var(--green-deep); color: white; border-radius: 16px;
-    padding: 14px 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-    flex-direction: column; gap: 10px;
-  }
-  .install-banner.show { display: flex; }
-  .install-banner p { font-size: 13px; line-height: 1.4; }
-  .install-banner p strong { color: var(--green-light); }
-  .install-actions { display: flex; gap: 8px; }
-  .btn-install { background: var(--green-light); color: white; padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 13px; font-weight: 600; }
-  .btn-dismiss { background: transparent; color: rgba(255,255,255,0.5); padding: 8px; border: none; cursor: pointer; font-size: 13px; }
-
-  /* ANIMAIONS */
-  @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-  .pulse { animation: pulse 2s infinite; }
-
-  /* Scroll reveal */
-  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s; }
-  .revealed { opacity: 1; transform: none; }
+/* Photo real images */
+.real-photo-frame{width:100%;height:200px;border-radius:16px;background-size:cover;background-position:center;margin-bottom:18px;position:relative;}
+.real-photo-frame::after{content:'📸 Photo réelle';position:absolute;bottom:8px;right:10px;background:rgba(0,0,0,0.5);color:white;font-size:10px;padding:3px 8px;border-radius:6px;font-weight:600;}
 </style>
 </head>
 <body>
 
-<div class="offline-banner">📡 Mode hors ligne — contenu mis en cache disponible</div>
+<div class="offline-bar">📡 Mode hors ligne — données mises en cache</div>
 
-<!-- NAV BOTTOM -->
-<nav class="bottom-nav">
-  <button class="nav-item active" onclick="showPage('accueil')" id="nav-accueil">
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-emoji" id="toast-emoji">🌿</div>
+  <div><div class="toast-title" id="toast-title">Bravo!</div><div class="toast-sub" id="toast-sub"></div></div>
+</div>
+
+<!-- LEVEL UP -->
+<div class="levelup-overlay" id="levelup">
+  <div class="levelup-stars">⭐</div>
+  <div class="levelup-title">Niveau supérieur!</div>
+  <div class="levelup-rank" id="levelup-rank">Explorateur Confirmé</div>
+  <button class="levelup-close" onclick="document.getElementById('levelup').classList.remove('show')">Continuer l'exploration →</button>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bnav">
+  <button class="bnav-btn on" id="nav-home" onclick="gp('home')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-    <span class="nav-label">Accueil</span>
+    <span class="bnav-label">Accueil</span>
   </button>
-  <button class="nav-item" onclick="showPage('carte')" id="nav-carte">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
-    <span class="nav-label">Carte</span>
+  <button class="bnav-btn" id="nav-quests" onclick="gp('quests')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+    <span class="bnav-label">Quêtes</span>
+    <span class="bnav-xp" id="quest-badge" style="display:none">3</span>
   </button>
-  <button class="nav-item" onclick="showPage('levadas')" id="nav-levadas">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/><circle cx="9" cy="7" r="4"/></svg>
-    <span class="nav-label">Levadas</span>
+  <button class="bnav-btn" id="nav-capture" onclick="gp('capture')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+    <span class="bnav-label">Capturer</span>
   </button>
-  <button class="nav-item" onclick="showPage('nature')" id="nav-nature">
+  <button class="bnav-btn" id="nav-explorer" onclick="gp('explorer')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22V12"/><path d="M5 3a7 7 0 0114 0c0 4.418-7 9-7 9S5 7.418 5 3z"/></svg>
-    <span class="nav-label">Nature</span>
+    <span class="bnav-label">Explorer</span>
   </button>
-  <button class="nav-item" onclick="showPage('carnet')" id="nav-carnet">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-    <span class="nav-label">Carnet</span>
+  <button class="bnav-btn" id="nav-profil" onclick="gp('profil')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    <span class="bnav-label">Profil</span>
   </button>
 </nav>
 
-<!-- ===================== PAGE ACCUEIL ===================== -->
-<div class="page active" id="page-accueil">
-  <div class="hero">
-    <div class="hero-bg"></div>
-    <div class="weather-pill" id="weather-pill">
-      <div class="weather-temp" id="hp-temp">22°</div>
-      <div class="weather-desc" id="hp-desc">Ensoleillé</div>
-    </div>
-    <div class="hero-tag">🌿 Île de Madère</div>
-    <h1>L'île <em>sauvage</em><br>de l'Atlantique</h1>
-    <p class="hero-sub">Guide nature · Hors ligne · GPS</p>
-    <svg class="hero-wave" viewBox="0 0 375 40" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-      <path d="M0 40 C100 0 275 50 375 20 L375 40 Z" fill="#f4f0e6"/>
-    </svg>
-  </div>
-
-  <!-- Faits rapides -->
-  <div class="section" style="margin-top: 20px;">
-    <div style="display:flex; gap:10px; overflow-x:auto; scrollbar-width:none; margin:0 -16px; padding:0 16px 4px;">
-      <div style="flex-shrink:0;background:white;border-radius:14px;padding:14px 16px;box-shadow:0 2px 10px rgba(0,0,0,0.07);text-align:center;min-width:100px;">
-        <div style="font-size:24px;margin-bottom:4px;">🗻</div>
-        <div style="font-size:16px;font-weight:700;color:var(--green-deep)">1862m</div>
-        <div style="font-size:11px;color:var(--text-light)">Pico Ruivo</div>
-      </div>
-      <div style="flex-shrink:0;background:white;border-radius:14px;padding:14px 16px;box-shadow:0 2px 10px rgba(0,0,0,0.07);text-align:center;min-width:100px;">
-        <div style="font-size:24px;margin-bottom:4px;">🌊</div>
-        <div style="font-size:16px;font-weight:700;color:var(--green-deep)">741km²</div>
-        <div style="font-size:11px;color:var(--text-light)">Superficie</div>
-      </div>
-      <div style="flex-shrink:0;background:white;border-radius:14px;padding:14px 16px;box-shadow:0 2px 10px rgba(0,0,0,0.07);text-align:center;min-width:100px;">
-        <div style="font-size:24px;margin-bottom:4px;">🌿</div>
-        <div style="font-size:16px;font-weight:700;color:var(--green-deep)">2500km</div>
-        <div style="font-size:11px;color:var(--text-light)">Levadas</div>
-      </div>
-      <div style="flex-shrink:0;background:white;border-radius:14px;padding:14px 16px;box-shadow:0 2px 10px rgba(0,0,0,0.07);text-align:center;min-width:100px;">
-        <div style="font-size:24px;margin-bottom:4px;">🦜</div>
-        <div style="font-size:16px;font-weight:700;color:var(--green-deep)">280+</div>
-        <div style="font-size:11px;color:var(--text-light)">Espèces oiseaux</div>
-      </div>
-      <div style="flex-shrink:0;background:white;border-radius:14px;padding:14px 16px;box-shadow:0 2px 10px rgba(0,0,0,0.07);text-align:center;min-width:100px;">
-        <div style="font-size:24px;margin-bottom:4px;">☀️</div>
-        <div style="font-size:16px;font-weight:700;color:var(--green-deep)">20°C</div>
-        <div style="font-size:11px;color:var(--text-light)">Moy. annuelle</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Sites incontournables -->
-  <div class="section" style="margin-top:24px;">
-    <div class="section-header">
-      <h2 class="section-title">Incontournables</h2>
-      <a href="#" class="section-link" onclick="showPage('carte');return false;">Voir carte →</a>
-    </div>
-    <div class="cards-scroll">
-      <div class="card" onclick="openModal('pico-ruivo')">
-        <div class="card-img" style="background:linear-gradient(135deg,#2d6a4f,#1a3a2a);">
-          🗻 <div class="card-badge">★ Top</div>
-        </div>
-        <div class="card-body">
-          <div class="card-name">Pico Ruivo</div>
-          <div class="card-meta"><span>🥾 Difficile</span><span>📍 Centre</span></div>
-        </div>
-      </div>
-      <div class="card" onclick="openModal('laurissilva')">
-        <div class="card-img" style="background:linear-gradient(135deg,#40916c,#2d6a4f);">
-          🌿 <div class="card-badge">UNESCO</div>
-        </div>
-        <div class="card-body">
-          <div class="card-name">Forêt Laurissilva</div>
-          <div class="card-meta"><span>🌳 Nature</span><span>📍 Nord</span></div>
-        </div>
-      </div>
-      <div class="card" onclick="openModal('cabo-girao')">
-        <div class="card-img" style="background:linear-gradient(135deg,#2196a6,#1a3a2a);">
-          🏔️
-        </div>
-        <div class="card-body">
-          <div class="card-name">Cabo Girão</div>
-          <div class="card-meta"><span>👁️ Panorama</span><span>📍 Sud</span></div>
-        </div>
-      </div>
-      <div class="card" onclick="openModal('queimadas')">
-        <div class="card-img" style="background:linear-gradient(135deg,#52b788,#40916c);">
-          🏡
-        </div>
-        <div class="card-body">
-          <div class="card-name">Queimadas</div>
-          <div class="card-meta"><span>🌫️ Nuages</span><span>📍 Nord</span></div>
-        </div>
-      </div>
-      <div class="card" onclick="openModal('porto-moniz')">
-        <div class="card-img" style="background:linear-gradient(135deg,#1e6091,#2196a6);">
-          🌊
-        </div>
-        <div class="card-body">
-          <div class="card-name">Porto Moniz</div>
-          <div class="card-meta"><span>🏊 Baignade</span><span>📍 Nord-O.</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Météo rapide -->
-  <div class="section" style="margin-top:24px;">
-    <div class="section-header">
-      <h2 class="section-title">Météo 7 jours</h2>
-      <a href="#" class="section-link" onclick="showPage('meteo');return false;">Détails →</a>
-    </div>
-    <div class="forecast-scroll" id="forecast-mini"></div>
-  </div>
-
-  <!-- Checklist rapide -->
-  <div class="section" style="margin-top:24px; padding-bottom:8px;">
-    <div class="section-header">
-      <h2 class="section-title">Ma préparation</h2>
-      <a href="#" class="section-link" onclick="showPage('carnet');return false;">Tout voir →</a>
-    </div>
-    <div id="quick-checks"></div>
-  </div>
-</div>
-
-<!-- ===================== PAGE CARTE ===================== -->
-<div class="page" id="page-carte">
-  <div class="page-header">
-    <h2>Carte interactive</h2>
-    <p>Points d'intérêt nature & randonnée</p>
-  </div>
-  <div class="section" style="padding-top:0;">
-    <div class="poi-filters" id="poi-filters">
-      <button class="filter-chip active" onclick="filterPOI('all', this)">Tout</button>
-      <button class="filter-chip" onclick="filterPOI('levada', this)">Levadas</button>
-      <button class="filter-chip" onclick="filterPOI('sommet', this)">Sommets</button>
-      <button class="filter-chip" onclick="filterPOI('plage', this)">Plages</button>
-      <button class="filter-chip" onclick="filterPOI('cascade', this)">Cascades</button>
-      <button class="filter-chip" onclick="filterPOI('foret', this)">Forêts</button>
-    </div>
-    <div class="map-container">
-      <svg class="map-svg" viewBox="0 0 360 240" id="madeira-map">
-        <!-- Fond mer -->
-        <rect width="360" height="240" fill="#1a3a4a"/>
-        <!-- Ombre île -->
-        <ellipse cx="165" cy="125" rx="145" ry="72" fill="rgba(0,0,0,0.3)" transform="translate(8,8)"/>
-        <!-- Corps principal Madère -->
-        <path d="M30,140 C40,120 55,105 80,95 C100,88 115,82 140,78 C165,74 185,70 210,72 C235,74 252,80 268,90 C282,100 292,112 296,125 C298,135 292,148 278,155 C260,165 240,168 215,170 C190,172 165,174 140,172 C112,170 88,165 68,158 C50,152 35,148 30,140 Z" fill="#2d6a4f"/>
-        <!-- Relief -->
-        <path d="M120,90 C130,82 145,78 160,76 C175,74 190,76 205,80 C218,84 228,92 230,100 C232,108 224,114 210,118 C196,122 178,124 162,124 C146,124 132,120 122,112 C114,106 112,96 120,90 Z" fill="#40916c"/>
-        <path d="M145,80 C155,75 165,72 175,73 C185,74 193,80 196,88 C198,95 192,102 182,106 C172,110 160,110 150,106 C140,102 136,94 138,86 C139,81 142,82 145,80 Z" fill="#52b788" opacity="0.7"/>
-        <!-- Routes principales -->
-        <path d="M50,140 C80,135 120,130 160,128 C200,126 240,128 280,135" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" fill="none" stroke-dasharray="4,2"/>
-        <!-- POI Pins -->
-        <g id="map-pins">
-          <!-- Funchal -->
-          <circle cx="200" cy="155" r="6" fill="#d4a843" id="pin-funchal" class="map-pin" data-type="ville"/>
-          <text x="200" y="170" text-anchor="middle" fill="white" font-size="8" opacity="0.9">Funchal</text>
-          <!-- Pico Ruivo -->
-          <circle cx="160" cy="88" r="6" fill="#e07a5f" id="pin-pico" class="map-pin" data-type="sommet"/>
-          <text x="160" y="82" text-anchor="middle" fill="white" font-size="7" opacity="0.9">Pico Ruivo</text>
-          <!-- Levada do Norte -->
-          <circle cx="130" cy="118" r="5" fill="#52b788" id="pin-lev1" class="map-pin" data-type="levada"/>
-          <!-- Queimadas -->
-          <circle cx="145" cy="100" r="5" fill="#52b788" id="pin-queimadas" class="map-pin" data-type="foret"/>
-          <!-- Porto Moniz -->
-          <circle cx="48" cy="110" r="5" fill="#2196a6" id="pin-porto" class="map-pin" data-type="plage"/>
-          <text x="48" y="104" text-anchor="middle" fill="white" font-size="7" opacity="0.9">P.Moniz</text>
-          <!-- Cabo Girão -->
-          <circle cx="155" cy="160" r="5" fill="#e07a5f" id="pin-cabo" class="map-pin" data-type="sommet"/>
-          <!-- Cascata -->
-          <circle cx="90" cy="108" r="5" fill="#60b4ff" id="pin-casca" class="map-pin" data-type="cascade"/>
-          <!-- Santana -->
-          <circle cx="195" cy="95" r="5" fill="#52b788" id="pin-santana" class="map-pin" data-type="levada"/>
-          <text x="195" y="89" text-anchor="middle" fill="white" font-size="7" opacity="0.9">Santana</text>
-        </g>
-        <!-- Légende -->
-        <rect x="10" y="200" width="340" height="32" rx="6" fill="rgba(0,0,0,0.35)"/>
-        <circle cx="25" cy="216" r="4" fill="#e07a5f"/>
-        <text x="33" y="220" fill="white" font-size="8">Sommet</text>
-        <circle cx="80" cy="216" r="4" fill="#52b788"/>
-        <text x="88" y="220" fill="white" font-size="8">Levada/Forêt</text>
-        <circle cx="148" cy="216" r="4" fill="#2196a6"/>
-        <text x="156" y="220" fill="white" font-size="8">Plage</text>
-        <circle cx="195" cy="216" r="4" fill="#60b4ff"/>
-        <text x="203" y="220" fill="white" font-size="8">Cascade</text>
-        <circle cx="250" cy="216" r="4" fill="#d4a843"/>
-        <text x="258" y="220" fill="white" font-size="8">Ville</text>
-      </svg>
-      <button class="gps-btn" onclick="locateMe()" title="Ma position">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>
-      </button>
-    </div>
-    <p style="font-size:12px;color:var(--text-light);text-align:center;margin-top:8px;">Appuyez sur un point pour plus d'infos</p>
-  </div>
-
-  <!-- Liste POI -->
-  <div class="section" style="margin-top:24px;">
-    <h3 style="font-size:16px;font-weight:700;color:var(--text-dark);margin-bottom:14px;">Points d'intérêt</h3>
-    <div id="poi-list"></div>
-  </div>
-</div>
-
-<!-- ===================== PAGE LEVADAS ===================== -->
-<div class="page" id="page-levadas">
-  <div class="page-header">
-    <h2>Levadas & Sentiers</h2>
-    <p>2500 km de canaux d'irrigation à explorer</p>
-  </div>
-  <div class="section" style="padding-top:0;">
-    <div class="trail-list" id="trail-list"></div>
-  </div>
-</div>
-
-<!-- ===================== PAGE NATURE ===================== -->
-<div class="page" id="page-nature">
-  <div class="page-header">
-    <h2>Faune & Flore</h2>
-    <p>Espèces endémiques de Madère</p>
-  </div>
-
-  <!-- Sous-tabs -->
-  <div style="display:flex;gap:0;margin:0 16px 20px;border-radius:12px;overflow:hidden;border:1.5px solid var(--cream-dark);">
-    <button onclick="switchNatureTab('flore',this)" id="tab-flore" style="flex:1;padding:10px;border:none;background:var(--green-mid);color:white;font-size:13px;font-weight:600;cursor:pointer;">🌿 Flore</button>
-    <button onclick="switchNatureTab('faune',this)" id="tab-faune" style="flex:1;padding:10px;border:none;background:white;color:var(--text-mid);font-size:13px;font-weight:600;cursor:pointer;">🦋 Faune</button>
-    <button onclick="switchNatureTab('oiseaux',this)" id="tab-oiseaux" style="flex:1;padding:10px;border:none;background:white;color:var(--text-mid);font-size:13px;font-weight:600;cursor:pointer;">🐦 Oiseaux</button>
-  </div>
-
-  <div class="section" style="padding-top:0;">
-    <div class="species-grid" id="species-grid"></div>
-  </div>
-
-  <!-- Conseils nature -->
-  <div class="section" style="margin-top:24px;">
-    <div style="background:var(--green-dark);border-radius:var(--radius);padding:18px;color:white;">
-      <div style="font-size:18px;margin-bottom:8px;">🌿 Charte de la nature</div>
-      <div style="font-size:13px;line-height:1.7;opacity:0.85;">
-        • Ne cueillez pas les plantes endémiques<br>
-        • Restez sur les sentiers balisés<br>
-        • Emportez vos déchets<br>
-        • Ne nourrissez pas la faune sauvage<br>
-        • Respectez le silence en forêt laurissilva
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ===================== PAGE CARNET ===================== -->
-<div class="page" id="page-carnet">
-  <!-- Sous-tabs -->
-  <div class="page-header" style="margin-bottom:12px;">
-    <h2>Mon Carnet</h2>
-  </div>
-  <div style="display:flex;gap:0;margin:0 16px 20px;border-radius:12px;overflow:hidden;border:1.5px solid var(--cream-dark);">
-    <button onclick="switchCarnetTab('notes',this)" id="ctab-notes" style="flex:1;padding:10px;border:none;background:var(--green-mid);color:white;font-size:13px;font-weight:600;cursor:pointer;">📝 Notes</button>
-    <button onclick="switchCarnetTab('checklist',this)" id="ctab-checklist" style="flex:1;padding:10px;border:none;background:white;color:var(--text-mid);font-size:13px;font-weight:600;cursor:pointer;">✅ Checklist</button>
-    <button onclick="switchCarnetTab('urgences',this)" id="ctab-urgences" style="flex:1;padding:10px;border:none;background:white;color:var(--text-mid);font-size:13px;font-weight:600;cursor:pointer;">🆘 Urgences</button>
-  </div>
-
-  <div id="carnet-notes" class="section" style="padding-top:0;">
-    <div class="memo-editor">
-      <textarea class="memo-textarea" id="note-input" placeholder="Écrivez vos observations, souvenirs…"></textarea>
-      <div class="memo-actions">
-        <button class="btn btn-primary" onclick="addNote()">Ajouter ✓</button>
-      </div>
-    </div>
-    <div id="notes-list"></div>
-  </div>
-
-  <div id="carnet-checklist" class="section" style="padding-top:0;display:none;">
-    <div id="checklist-full"></div>
-  </div>
-
-  <div id="carnet-urgences" class="section" style="padding-top:0;display:none;">
-    <div id="urgences-list"></div>
-  </div>
-</div>
-
 <!-- MODAL -->
-<div class="modal-overlay" id="modal-overlay" onclick="closeModalIfOverlay(event)">
-  <div class="modal" id="modal-content" style="position:relative;">
-    <div class="modal-handle"></div>
-    <button class="close-modal" onclick="closeModal()">✕</button>
+<div class="modal-bg" id="modal" onclick="closeModalIf(event)">
+  <div class="modal-sheet" id="modal-sheet">
+    <div class="modal-grip"></div>
+    <button class="modal-close" onclick="closeModal()">✕</button>
     <div id="modal-body"></div>
   </div>
 </div>
 
-<!-- INSTALL BANNER -->
-<div class="install-banner" id="install-banner">
-  <p><strong>📱 Installer Madeira Wild</strong><br>Accès hors ligne complet, GPS, météo & guide nature.</p>
-  <div class="install-actions">
-    <button class="btn-install" id="btn-install-app">Installer l'app</button>
-    <button class="btn-dismiss" onclick="dismissInstall()">Plus tard</button>
+<!-- ═══ PAGE HOME ═══ -->
+<div class="page on" id="page-home">
+  <div class="hero">
+    <div class="hero-photo" id="hero-photo" style="background-image:url('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Levada_Caldeirao_Verde_Madeira.jpg/1280px-Levada_Caldeirao_Verde_Madeira.jpg')"></div>
+    <svg class="hero-wave" viewBox="0 0 375 44" preserveAspectRatio="none"><path d="M0 44 C100 10 275 50 375 24 L375 44 Z" fill="#f5f0e8"/></svg>
+    <div class="xp-widget">
+      <div class="xp-avatar" id="xp-avatar">🌱</div>
+      <div class="xp-info">
+        <div class="xp-rank" id="xp-rank-label">Botaniste Débutant</div>
+        <div class="xp-bar-wrap"><div class="xp-bar" id="xp-bar-fill" style="width:0%"></div></div>
+        <div class="xp-pts" id="xp-pts-label">0 / 200 XP</div>
+      </div>
+      <div class="streak-pill">
+        <div class="streak-num" id="streak-num">0</div>
+        <div class="streak-label">Streak</div>
+      </div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">🌿 Île de Madère</div>
+      <h1>L'île <em>sauvage</em><br>de l'Atlantique</h1>
+      <p class="hero-sub">Explorez · Capturez · Progressez</p>
+    </div>
+  </div>
+
+  <div class="sec" style="margin-top:20px">
+    <div class="sec-head"><h2 class="sec-title">Sites à découvrir</h2><span class="sec-link" onclick="gp('quests')">Voir quêtes →</span></div>
+    <div class="hscroll" id="sites-scroll"></div>
+  </div>
+
+  <div class="sec" style="margin-top:22px">
+    <div class="sec-head"><h2 class="sec-title">Météo 7 jours</h2></div>
+    <div class="forecast-scroll" id="forecast"></div>
+  </div>
+
+  <div class="sec" style="margin-top:22px;padding-bottom:8px">
+    <div class="sec-head"><h2 class="sec-title">Quête du jour</h2><span class="sec-link" onclick="gp('quests')">Toutes →</span></div>
+    <div id="daily-quest"></div>
   </div>
 </div>
 
+<!-- ═══ PAGE QUÊTES ═══ -->
+<div class="page" id="page-quests">
+  <div class="page-hdr"><h2>Quêtes & Défis</h2><p>Complétez des missions pour gagner des XP et des badges</p></div>
+  <div style="display:flex;gap:0;margin:0 16px 18px;border-radius:12px;overflow:hidden;border:2px solid var(--parchment);">
+    <button onclick="switchQTab('active',this)" id="qt-active" style="flex:1;padding:10px;border:none;background:var(--moss);color:white;font-size:13px;font-weight:700;cursor:pointer;">🔥 En cours</button>
+    <button onclick="switchQTab('done',this)" id="qt-done" style="flex:1;padding:10px;border:none;background:white;color:#888;font-size:13px;font-weight:700;cursor:pointer;">✅ Terminées</button>
+  </div>
+  <div class="sec" style="padding-top:0"><div id="quest-list"></div></div>
+</div>
+
+<!-- ═══ PAGE CAPTURE ═══ -->
+<div class="page" id="page-capture">
+  <div class="page-hdr"><h2>Capturer la Nature</h2><p>Photographiez faune & flore — l'IA identifie l'espèce</p></div>
+  <div class="sec" style="padding-top:0">
+    <div class="capture-zone">
+      <div class="camera-preview" id="cam-preview" onclick="startCamera()">
+        <div class="cam-dots"></div>
+        <video id="cam-video" autoplay playsinline style="display:none"></video>
+        <canvas id="cam-canvas"></canvas>
+        <div class="camera-frame" id="cam-frame" style="display:none"></div>
+        <span class="cam-icon">📷</span>
+        <span class="cam-hint">Appuyer pour activer la caméra</span>
+      </div>
+      <div class="capture-controls">
+        <button class="btn-cam-action" onclick="switchCamera()" title="Retourner">🔄</button>
+        <button class="btn-capture" id="btn-shoot" onclick="shootPhoto()" style="display:none"><div class="btn-capture-inner"></div></button>
+        <div id="shoot-placeholder" style="width:68px;height:68px;border-radius:50%;background:rgba(255,255,255,0.05);border:2px dashed rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:10px;color:rgba(255,255,255,0.3);text-align:center;padding:6px;">Active caméra</div>
+        <button class="btn-cam-action" onclick="pickFromGallery()" title="Galerie">🖼️</button>
+      </div>
+    </div>
+    <button class="ai-detect-btn" id="ai-btn" onclick="detectSpecies()" disabled>🔍 Identifier l'espèce avec l'IA</button>
+    <input type="file" id="gallery-input" accept="image/*" style="display:none" onchange="loadGalleryPhoto(event)">
+    <div class="sec-head" style="padding:0 0 12px"><h2 class="sec-title">Mes captures</h2><span class="sec-link" id="captures-count">0 capture(s)</span></div>
+    <div class="captures-grid" id="captures-grid">
+      <div style="grid-column:span 3;text-align:center;padding:30px;color:#bbb;font-size:14px;">Aucune capture — prenez votre première photo ! 📷</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE EXPLORER ═══ -->
+<div class="page" id="page-explorer">
+  <div class="page-hdr"><h2>Encyclopédie</h2><p>Déverrouillez les espèces en les capturant</p></div>
+  <div style="display:flex;gap:0;margin:0 16px 18px;border-radius:12px;overflow:hidden;border:2px solid var(--parchment);">
+    <button onclick="switchNTab('flore',this)" id="nt-flore" style="flex:1;padding:9px;border:none;background:var(--moss);color:white;font-size:12px;font-weight:700;cursor:pointer;">🌿 Flore</button>
+    <button onclick="switchNTab('faune',this)" id="nt-faune" style="flex:1;padding:9px;border:none;background:white;color:#888;font-size:12px;font-weight:700;cursor:pointer;">🦋 Faune</button>
+    <button onclick="switchNTab('oiseaux',this)" id="nt-oiseaux" style="flex:1;padding:9px;border:none;background:white;color:#888;font-size:12px;font-weight:700;cursor:pointer;">🐦 Oiseaux</button>
+  </div>
+  <div class="sec" style="padding-top:0"><div class="species-grid" id="species-grid"></div></div>
+</div>
+
+<!-- ═══ PAGE PROFIL ═══ -->
+<div class="page" id="page-profil">
+  <div class="profile-hero">
+    <div class="profile-avatar-big" id="prof-avatar">🌱</div>
+    <div class="profile-name">Explorateur</div>
+    <div class="profile-rank" id="prof-rank">⭐ Botaniste Débutant</div>
+    <div class="stats-row">
+      <div class="stat-box"><div class="stat-val" id="stat-xp">0</div><div class="stat-lbl">XP Total</div></div>
+      <div class="stat-box"><div class="stat-val" id="stat-captures">0</div><div class="stat-lbl">Captures</div></div>
+      <div class="stat-box"><div class="stat-val" id="stat-quests">0</div><div class="stat-lbl">Quêtes</div></div>
+      <div class="stat-box"><div class="stat-val" id="stat-streak">0</div><div class="stat-lbl">Streak 🔥</div></div>
+    </div>
+  </div>
+  <div class="sec" style="margin-top:22px"><div class="sec-head"><h2 class="sec-title">Badges</h2></div><div class="badges-grid" id="badges-grid"></div></div>
+  <div class="sec" style="margin-top:22px;padding-bottom:8px"><div class="sec-head"><h2 class="sec-title">Classement</h2></div><div id="leaderboard"></div></div>
+</div>
+
 <script>
-// ================ DATA ================
-const TRAILS = [
-  { id:'lev-25fontes', name:'Levada das 25 Fontes', dist:'8.4 km', duration:'3h', diff:'easy', elev:'300m', icon:'💧', region:'Rabacal', desc:'La levada la plus célèbre — 25 sources d\'eau cristalline au bout du chemin. Sous-bois de laurissilva enchanteur.', tips:['Partez tôt (8h) pour éviter la foule','Emportez une lampe torche (tunnel)','Chaussures imperméables conseillées'] },
-  { id:'lev-caldeirão-verde', name:'Levada do Caldeirão Verde', dist:'13 km', duration:'5h', diff:'med', elev:'450m', icon:'🌿', region:'Queimadas', desc:'Sentier mythique à travers la forêt de laurissilva UNESCO. Aboutit à une cascade de 100m dans un caldeira.', tips:['4 tunnels — lampe frontale obligatoire','Accès depuis Queimadas','Conditions meteorologiques changeantes'] },
-  { id:'pico-ruivo', name:'Pico Ruivo (3 picos)', dist:'6.7 km', duration:'4h', diff:'hard', elev:'580m', icon:'🗻', region:'Centre', desc:'Le toit de Madère à 1862m. Vue à 360° au-dessus des nuages. Traversée des trois plus hauts sommets de l\'île.', tips:['Départ depuis Achada do Teixeira','Heure dorée au lever du soleil','Température 10°C plus fraiche qu\'en bas'] },
-  { id:'ponta-sao-lourenco', name:'Ponta de São Lourenço', dist:'8 km', duration:'3.5h', diff:'med', elev:'200m', icon:'🏜️', region:'Est', desc:'Paysage lunaire contrastant avec le reste de l\'île. Falaises dramatiques sur l\'océan Atlantique. Faune unique.', tips:['Sentier exposé au vent fort','Apportez eau et crème solaire','Zone de nidification des puffins'] },
-  { id:'lev-ribeiro-frio', name:'Levada do Furado', dist:'11 km', duration:'4h', diff:'easy', elev:'100m', icon:'🌊', region:'Ribeiro Frio', desc:'Facile et très accessible depuis Ribeiro Frio. Traversée de forêts de laurissilva et d\'eucalyptus.', tips:['Idéal pour les familles','Mirador avec vue sur la vallée','Présence fréquente de pies bleues de Madère'] },
-  { id:'vereda-encumeada', name:'Vereda da Encumeada', dist:'14 km', duration:'6h', diff:'hard', elev:'800m', icon:'⛰️', region:'Centre', desc:'Traversée alpestre entre Encumeada et São Vicente. Vues panoramiques sur les deux versants de l\'île.', tips:['Météo imprévisible — vérifiez avant','Équipement complet requis','Guide recommandé pour les débutants'] },
+// ── DATA ──────────────────────────────────
+const SITES = [
+  { id:'levada', name:'Levada 25 Fontes', sub:'Forêt laurissilva · UNESCO', xp:120,
+    photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Levada_Caldeirao_Verde_Madeira.jpg/800px-Levada_Caldeirao_Verde_Madeira.jpg',
+    bg:'#2d6a4f', emoji:'💧',
+    desc:'Sentier mythique à travers la forêt de laurissilva classée UNESCO. 25 sources d\'eau cristalline au bout du chemin, sous des lauriers couverts de mousse verte.',
+    infos:[{l:'Distance',v:'8.4 km'},{l:'Durée',v:'3h'},{l:'Diff.',v:'Facile'},{l:'Zone',v:'Rabacal'}],
+    tips:['Partez tôt (8h) pour éviter la foule','Lampe torche pour les tunnels','Chaussures imperméables conseillées','Riche en pigeon trocaz'] },
+  { id:'pico-ruivo', name:'Pico Ruivo', sub:'1862m · Toit de Madère', xp:180,
+    photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Pico_Ruivo_Madeira_2016_Topo.jpg/800px-Pico_Ruivo_Madeira_2016_Topo.jpg',
+    bg:'#1a3a2a', emoji:'🗻',
+    desc:'Le plus haut sommet de Madère (1862m). Vue à 360° au-dessus des nuages. Bruyères arborescentes géantes et orchidées endémiques au programme.',
+    infos:[{l:'Altitude',v:'1862 m'},{l:'Durée',v:'4h A/R'},{l:'Diff.',v:'Difficile'},{l:'Départ',v:'Achada Teixeira'}],
+    tips:['Départ à 5h30 pour le lever du soleil','Températures 10°C plus fraîches','Balisage PR1 clairement visible','Refuge avec hébergement'] },
+  { id:'cabo-girao', name:'Cabo Girão', sub:'580m · Skywalk en verre', xp:80,
+    photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Cabo_Gir%C3%A3o_Skywalk.jpg/800px-Cabo_Gir%C3%A3o_Skywalk.jpg',
+    bg:'#1e6091', emoji:'🏔️',
+    desc:'2ème plus haute falaise d\'Europe avec son skywalk en verre transparent. En contrebas, des potagers inaccessibles par route, desservis uniquement par téléférique.',
+    infos:[{l:'Hauteur',v:'580 m'},{l:'Skywalk',v:'Gratuit'},{l:'Accès',v:'Câmara Lobos'},{l:'Vue',v:'180°'}],
+    tips:['Tôt le matin — moins de monde','Téléférique vers les fajãs','Café panoramique sur place','Coucher de soleil spectaculaire'] },
+  { id:'queimadas', name:'Queimadas', sub:'870m · Cœur de la laurissilva', xp:100,
+    photo:'https://www.visitmadeira.com/wp-content/uploads/2021/04/queimadas-forest-park.jpg',
+    bg:'#40916c', emoji:'🏡',
+    desc:'La maison forestière de Queimadas, point de départ des plus belles levadas, perché à 870m dans les nuages. Jardins suspendus entourés de laurissilva.',
+    infos:[{l:'Altitude',v:'870 m'},{l:'Accès',v:'Santana'},{l:'Type',v:'Forêt & Levada'},{l:'Diff.',v:'Facile'}],
+    tips:['Point de départ Caldeirão Verde','Souvent dans les nuages après 14h','Apportez vos provisions','Zone à pigeon trocaz'] },
+  { id:'porto-moniz', name:'Porto Moniz', sub:'Piscines volcaniques naturelles', xp:90,
+    photo:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Porto_Moniz_Natural_Pools_Madeira.jpg/800px-Porto_Moniz_Natural_Pools_Madeira.jpg',
+    bg:'#1a6b8a', emoji:'🌊',
+    desc:'Les célèbres piscines naturelles de lave volcanique de Porto Moniz. L\'Atlantique s\'engouffre dans des bassins naturels creusés par des millions d\'années d\'érosion.',
+    infos:[{l:'Zone',v:'Nord-Ouest'},{l:'Entrée',v:'~3€'},{l:'Eau',v:'18-22°C'},{l:'Type',v:'Volcanique'}],
+    tips:['Arriver tôt en été','Chaussures aquatiques utiles','Deux complexes distincts','Excellents restaurants poisson'] },
 ];
 
-const POIS = [
-  { name:'Pico Ruivo', type:'sommet', emoji:'🗻', desc:'Plus haut sommet, 1862m' },
-  { name:'Levada 25 Fontes', type:'levada', emoji:'💧', desc:'Levada & sources cristallines' },
-  { name:'Porto Moniz', type:'plage', emoji:'🌊', desc:'Piscines naturelles volcaniques' },
-  { name:'Queimadas', type:'foret', emoji:'🌿', desc:'Forêt laurissilva UNESCO' },
-  { name:'Cascata do Risco', type:'cascade', emoji:'💦', desc:'Cascade de 100m' },
-  { name:'Cabo Girão', type:'sommet', emoji:'🏔️', desc:'2ème plus haute falaise d\'Europe, 580m' },
-  { name:'Santana', type:'levada', emoji:'🏡', desc:'Village & casas de colmo' },
-  { name:'Ponta São Lourenço', type:'plage', emoji:'🦅', desc:'Paysage lunaire & faune marine' },
+const QUESTS = [
+  { id:'q1', name:'Premier regard', desc:'Prenez votre première photo nature', xp:50, diff:'easy', emoji:'📷', total:1, done:false },
+  { id:'q2', name:'L\'œil du botaniste', desc:'Capturez 5 espèces végétales différentes', xp:120, diff:'med', emoji:'🔬', total:5, done:false },
+  { id:'q3', name:'Chasseur de sommets', desc:'Photographiez un sommet de Madère', xp:180, diff:'hard', emoji:'🗻', total:1, done:false },
+  { id:'q4', name:'Gardien des piscines', desc:'Visitez les piscines de Porto Moniz', xp:80, diff:'easy', emoji:'🌊', total:1, done:false },
+  { id:'q5', name:'Ornithologue amateur', desc:'Photographiez 3 oiseaux différents', xp:150, diff:'hard', emoji:'🦅', total:3, done:false },
+  { id:'q6', name:'Collection de levadas', desc:'Marchez sur 3 levadas différentes', xp:180, diff:'med', emoji:'💧', total:3, done:false },
+  { id:'q7', name:'Crépuscule volcanique', desc:'Photographiez un coucher ou lever de soleil', xp:100, diff:'easy', emoji:'🌅', total:1, done:false },
+  { id:'q8', name:'Encyclopédiste', desc:'Déverrouillez 8 espèces dans l\'encyclopédie', xp:300, diff:'hard', emoji:'📚', total:8, done:false },
 ];
 
 const SPECIES = {
-  flore: [
-    { name:'Til', latin:'Ocotea foetens', emoji:'🌳', tag:'endemic', color:'#d8f3dc' },
-    { name:'Til de Madère', latin:'Persea indica', emoji:'🌿', tag:'endemic', color:'#d8f3dc' },
-    { name:'Orchidée de Madère', latin:'Dactylorhiza foliosa', emoji:'🌸', tag:'endemic', color:'#fde8e4' },
-    { name:'Euphorbe arborescent', latin:'Euphorbia piscatoria', emoji:'🌵', tag:'endemic', color:'#d8f3dc' },
-    { name:'Strelitzia', latin:'Strelitzia reginae', emoji:'🌺', tag:'common', color:'#fff3cd' },
-    { name:'Jacaranda', latin:'Jacaranda mimosifolia', emoji:'💜', tag:'common', color:'#fff3cd' },
+  flore:[
+    { id:'sf1', name:'Til de Madère', latin:'Ocotea foetens', emoji:'🌳', tag:'e', color:'#d8f3dc', locked:true, xp:30, desc:'Arbre emblématique de la laurissilva. Peut vivre plus de 800 ans et atteindre 40m de hauteur. Ses fruits attirent le pigeon trocaz.' },
+    { id:'sf2', name:'Orchidée de Madère', latin:'Dactylorhiza foliosa', emoji:'🌸', tag:'e', color:'#fde8e4', locked:true, xp:50, desc:'Orchidée endémique qui fleurit d\'avril à juillet dans les zones humides d\'altitude. Hauteur jusqu\'à 70cm.' },
+    { id:'sf3', name:'Euphorbe arborescent', latin:'Euphorbia piscatoria', emoji:'🌵', tag:'e', color:'#d8f3dc', locked:true, xp:40, desc:'Plante succulente endémique colonisant les falaises et zones côtières arides. Sève toxique.' },
+    { id:'sf4', name:'Strelitzia', latin:'Strelitzia reginae', emoji:'🌺', tag:'c', color:'#fff3cd', locked:false, xp:20, desc:'L\'oiseau de paradis, symbole floral de Madère. Omniprésent dans jardins et talus. Fleurit toute l\'année.' },
+    { id:'sf5', name:'Jacaranda', latin:'Jacaranda mimosifolia', emoji:'💜', tag:'c', color:'#ede0ff', locked:false, xp:20, desc:'Floraison violette spectaculaire de mai à juin. Tapisse les rues de Funchal d\'un tapis mauve.' },
+    { id:'sf6', name:'Calluna des bruyères', latin:'Erica arborea', emoji:'🌼', tag:'e', color:'#d8f3dc', locked:true, xp:35, desc:'Bruyère arborescente qui peut dépasser 6m de hauteur sur les crêtes de montagne. Ses fleurs blanches attirent les abeilles.' },
   ],
-  faune: [
-    { name:'Monk seal de Madère', latin:'Monachus monachus', emoji:'🦭', tag:'rare', color:'#fde8e4' },
-    { name:'Lézard de Madère', latin:'Teira dugesii', emoji:'🦎', tag:'endemic', color:'#d8f3dc' },
-    { name:'Puffin des Baléares', latin:'Puffinus mauretanicus', emoji:'🐟', tag:'rare', color:'#fde8e4' },
-    { name:'Bécasse des bois', latin:'Scolopax rusticola', emoji:'🦆', tag:'common', color:'#fff3cd' },
-    { name:'Dauphin commun', latin:'Delphinus delphis', emoji:'🐬', tag:'common', color:'#fff3cd' },
-    { name:'Baleine à bosse', latin:'Megaptera novaeangliae', emoji:'🐋', tag:'rare', color:'#fde8e4' },
+  faune:[
+    { id:'fa1', name:'Lézard de Madère', latin:'Teira dugesii', emoji:'🦎', tag:'e', color:'#d8f3dc', locked:true, xp:35, desc:'Petit lézard endémique très actif sur les rochers et murets ensoleillés. Couleur verte irisée caractéristique.' },
+    { id:'fa2', name:'Moine de Méditerranée', latin:'Monachus monachus', emoji:'🦭', tag:'r', color:'#fde8e4', locked:true, xp:100, desc:'Pinnipède parmi les plus menacés au monde. Quelques individus dans les grottes de l\'archipel.' },
+    { id:'fa3', name:'Dauphin commun', latin:'Delphinus delphis', emoji:'🐬', tag:'c', color:'#e0f0ff', locked:false, xp:25, desc:'Très fréquent en mer. Les excursions whale watching permettent d\'observer des groupes nombreux.' },
+    { id:'fa4', name:'Baleine à bosse', latin:'Megaptera novaeangliae', emoji:'🐋', tag:'r', color:'#fde8e4', locked:true, xp:80, desc:'De passage au printemps lors de sa migration. Observation entre mars et mai depuis le nord de l\'île.' },
+    { id:'fa5', name:'Lapin de garenne', latin:'Oryctolagus cuniculus', emoji:'🐇', tag:'c', color:'#f0f0e8', locked:false, xp:15, desc:'Abondant partout, notamment dans les zones ouvertes et talus herbeux de l\'île.' },
+    { id:'fa6', name:'Cétoine dorée', latin:'Cetonia aurata', emoji:'🪲', tag:'c', color:'#d8f3dc', locked:false, xp:15, desc:'Coléoptère vert métallique brillant. Visible sur les fleurs lors des journées chaudes de printemps.' },
   ],
-  oiseaux: [
-    { name:'Pigeon trocaz', latin:'Columba trocaz', emoji:'🕊️', tag:'endemic', color:'#d8f3dc' },
-    { name:'Pie bleue de Madère', latin:'Cyanopica cooki', emoji:'🔵', tag:'endemic', color:'#d8f3dc' },
-    { name:'Faucon crécerelle', latin:'Falco tinnunculus', emoji:'🦅', tag:'common', color:'#fff3cd' },
-    { name:'Pétrel de Bulwer', latin:'Bulweria bulwerii', emoji:'🌊', tag:'rare', color:'#fde8e4' },
-    { name:'Canari de Madère', latin:'Serinus canaria', emoji:'🐤', tag:'endemic', color:'#d8f3dc' },
-    { name:'Merle noir', latin:'Turdus merula cabrerae', emoji:'⚫', tag:'endemic', color:'#d8f3dc' },
-  ],
-};
-
-const CHECKLIST = {
-  'Équipement randonnée': [
-    'Chaussures de randonnée imperméables',
-    'Bâtons de marche',
-    'Poncho / veste imperméable',
-    'Sac à dos 20-30L',
-    'Lampe frontale + piles',
-  ],
-  'Sécurité': [
-    'Trousse de premiers secours',
-    'Sifflet d\'urgence',
-    'Couverture de survie',
-    'Téléphone chargé (+ batterie externe)',
-    'Carte hors-ligne téléchargée',
-  ],
-  'Confort': [
-    'Eau (min. 2L par randonnée)',
-    'Snacks énergétiques',
-    'Crème solaire SPF 50+',
-    'Lunettes de soleil',
-    'Chapeau ou casquette',
-  ],
-  'Nature': [
-    'Jumelles pour les oiseaux',
-    'Carnet d\'observations',
-    'Guide des plantes locales',
-    'Sacs poubelle (laisser propre)',
+  oiseaux:[
+    { id:'oi1', name:'Pigeon trocaz', latin:'Columba trocaz', emoji:'🕊️', tag:'e', color:'#d8f3dc', locked:true, xp:60, desc:'Pigeon endémique de la laurissilva, protégé depuis 1986. Sa population se rétablit grâce aux mesures de conservation.' },
+    { id:'oi2', name:'Canari de Madère', latin:'Serinus canaria', emoji:'🐤', tag:'e', color:'#fff3cd', locked:true, xp:45, desc:'L\'ancêtre de tous les canaris domestiques. Son chant mélodieux emplit jardins et forêts.' },
+    { id:'oi3', name:'Faucon crécerelle', latin:'Falco tinnunculus', emoji:'🦅', tag:'c', color:'#e8f4f8', locked:false, xp:30, desc:'Rapace diurne commun. Plane au-dessus des falaises et espaces ouverts, tête fixe face au vent.' },
+    { id:'oi4', name:'Pétrel de Bulwer', latin:'Bulweria bulwerii', emoji:'🌊', tag:'r', color:'#fde8e4', locked:true, xp:70, desc:'Petit oiseau marin nichant dans les falaises côtières. Actif la nuit pendant la saison de reproduction.' },
+    { id:'oi5', name:'Martin-pêcheur', latin:'Alcedo atthis', emoji:'💙', tag:'c', color:'#e0f0ff', locked:false, xp:35, desc:'Observable le long des levadas et rivières. Son plumage bleu turquoise éclatant le rend inconfondable.' },
+    { id:'oi6', name:'Merle insulaire', latin:'Turdus merula cabrerae', emoji:'⚫', tag:'e', color:'#e0e0e0', locked:true, xp:40, desc:'Sous-espèce endémique plus sombre. Chant riche et varié, présent dans tous les habitats de l\'île.' },
   ],
 };
 
-const URGENCES = [
-  { name:'SAMU / Urgences', num:'112', emoji:'🚑', color:'urg-red' },
-  { name:'Police (GNR)', num:'291 202 400', emoji:'👮', color:'urg-blue' },
-  { name:'Pompiers Funchal', num:'291 220 580', emoji:'🚒', color:'urg-orange' },
-  { name:'Gardes forestiers', num:'291 750 075', emoji:'🌿', color:'urg-green' },
-  { name:'Hôpital Dr. Nélio Mendonça', num:'291 705 600', emoji:'🏥', color:'urg-blue' },
-  { name:'SOS Mer', num:'291 213 112', emoji:'⚓', color:'urg-blue' },
+const BADGES = [
+  { id:'b1', name:'Premier regard', emoji:'👁️', desc:'Première capture photo', earned:false },
+  { id:'b2', name:'Ami des plantes', emoji:'🌿', desc:'3 plantes capturées', earned:false },
+  { id:'b3', name:'Randonneur', emoji:'🥾', desc:'Première quête levada', earned:false },
+  { id:'b4', name:'Ornithologue', emoji:'🦅', desc:'3 oiseaux capturés', earned:false },
+  { id:'b5', name:'Sommet conquis', emoji:'🗻', desc:'Quête Pico Ruivo', earned:false },
+  { id:'b6', name:'Encyclopédiste', emoji:'📚', desc:'8 espèces débloquées', earned:false },
+  { id:'b7', name:'Naturaliste', emoji:'🔬', desc:'10 espèces au total', earned:false },
+  { id:'b8', name:'Maître Naturaliste', emoji:'🏆', desc:'Niveau 4 atteint', earned:false },
 ];
 
-const MODAL_DATA = {
-  'pico-ruivo': {
-    emoji:'🗻', title:'Pico Ruivo', subtitle:'1862m · Plus haut sommet de Madère',
-    infos:[{label:'Altitude',val:'1862 m'},{label:'Durée',val:'4h A/R'},{label:'Distance',val:'6.7 km'},{label:'Départ',val:'Achada Teixeira'}],
-    desc:'Au-dessus des nuages, le Pico Ruivo offre une vue à 360° sur toute l\'île. Le lever du soleil depuis le refuge est une expérience inoubliable. La végétation y est unique : bruyères arborescentes géantes, fougères arborescentes et orchidées endémiques.',
-    tips:['Partez à 5h30 pour le lever du soleil','Températures 10°C plus fraîches — habillez-vous en couches','Route d\'accès souvent dans les nuages','Le refuge de Pico Ruivo propose hébergement et repas','Balisage PR1 clairement visible'],
-  },
-  'laurissilva': {
-    emoji:'🌿', title:'Forêt Laurissilva', subtitle:'Patrimoine mondial UNESCO',
-    infos:[{label:'Superficie',val:'15 000 ha'},{label:'Âge',val:'>65 Ma'},{label:'Zone',val:'Nord & Centre'},{label:'Classement',val:'UNESCO 1999'}],
-    desc:'La forêt de laurissilva de Madère est l\'un des vestiges les mieux préservés de ce type de forêt subtropicale qui couvrait jadis le bassin méditerranéen. Classée au patrimoine mondial en 1999, elle abrite des dizaines d\'espèces endémiques.',
-    tips:['Queimadas est la meilleure porte d\'entrée','Humidité permanente — veste imperméable indispensable','Silence absolu pour observer les oiseaux','Les lichens et mousses sont indicateurs de qualité d\'air','Interdiction absolue de cueillir les plantes'],
-  },
-  'cabo-girao': {
-    emoji:'🏔️', title:'Cabo Girão', subtitle:'2ème plus haute falaise d\'Europe — 580m',
-    infos:[{label:'Hauteur',val:'580 m'},{label:'Skywalk',val:'Gratuit'},{label:'Accès',val:'Câmara de Lobos'},{label:'Vue',val:'Panoramique 180°'}],
-    desc:'Cabo Girão est l\'une des falaises les plus hautes d\'Europe avec ses 580 mètres de chute verticale. Un skywalk en verre permet de regarder directement en bas. En contrebas, des potagers impossibles sont cultivés par des agriculteurs qui y accèdent par téléférique.',
-    tips:['Visite idéale tôt le matin (moins de monde)','Le téléférique descend vers les fajãs','Petit café/restaurant sur place','Coucher de soleil spectaculaire','Accès libre au belvédère'],
-  },
-  'queimadas': {
-    emoji:'🏡', title:'Queimadas', subtitle:'Cœur de la laurissilva · 870m d\'altitude',
-    infos:[{label:'Altitude',val:'870 m'},{label:'Accès',val:'Santana'},{label:'Type',val:'Forêt & Levada'},{label:'Difficulté',val:'Facile'}],
-    desc:'La maison forestière de Queimadas est le point de départ des plus belles randonnées dans la laurissilva. Entouré de jardins suspendus dans les nuages, c\'est un endroit magique où l\'humidité transforme les arbres en sculptures couvertes de mousse.',
-    tips:['Point de départ levada Caldeirão Verde','Parking disponible (souvent complet en été)','Restaurant fermé — apportez vos provisions','Zone souvent dans les nuages après 14h','Idéal pour observer le pigeon trocaz'],
-  },
-  'porto-moniz': {
-    emoji:'🌊', title:'Porto Moniz', subtitle:'Piscines naturelles volcaniques',
-    infos:[{label:'Zone',val:'Nord-Ouest'},{label:'Baignade',val:'Payant ~3€'},{label:'Saison',val:'Été'},{label:'Eau',val:'18-22°C'}],
-    desc:'Porto Moniz abrite les piscines naturelles les plus célèbres de Madère, creusées dans la roche volcanique par des millions d\'années d\'érosion. L\'eau de l\'Atlantique y est canalisée pour offrir une baignade unique face à l\'océan.',
-    tips:['Arrivée tôt recommandée en été','Chaussures aquatiques conseillées','Deux complexes distincts : Piscinas Naturais et Complexo Balnear','Village avec excellents restaurants de poisson','Lever et coucher de soleil remarquables'],
-  },
-};
-
-// ================ WEATHER SIMULATION ================
-const FORECAST = [
-  { day:'Auj.', emoji:'☀️', temp:'22°', today:true },
-  { day:'Lun.', emoji:'⛅', temp:'20°' },
-  { day:'Mar.', emoji:'🌧️', temp:'18°' },
-  { day:'Mer.', emoji:'⛅', temp:'19°' },
-  { day:'Jeu.', emoji:'☀️', temp:'23°' },
-  { day:'Ven.', emoji:'☀️', temp:'24°' },
-  { day:'Sam.', emoji:'🌤️', temp:'22°' },
+const RANKS = [
+  { name:'Botaniste Débutant', xp:0, emoji:'🌱' },
+  { name:'Naturaliste Curieux', xp:200, emoji:'🌿' },
+  { name:'Explorateur Confirmé', xp:500, emoji:'🦋' },
+  { name:'Gardien de la Laurissilva', xp:1000, emoji:'🌳' },
+  { name:'Maître Naturaliste', xp:2000, emoji:'🏆' },
 ];
 
-// ================ APP STATE ================
-let currentPage = 'accueil';
-let currentNatureTab = 'flore';
-let currentCarnetTab = 'notes';
-let notes = JSON.parse(localStorage.getItem('mw-notes') || '[]');
-let checks = JSON.parse(localStorage.getItem('mw-checks') || '{}');
-let deferredPrompt = null;
+const FORECAST_DATA = [
+  {d:'Auj.',e:'☀️',t:'22°',today:true},{d:'Lun.',e:'⛅',t:'20°'},{d:'Mar.',e:'🌧️',t:'17°'},
+  {d:'Mer.',e:'⛅',t:'19°'},{d:'Jeu.',e:'☀️',t:'23°'},{d:'Ven.',e:'☀️',t:'24°'},{d:'Sam.',e:'🌤️',t:'21°'},
+];
 
-// ================ INIT ================
+const LB_DATA = [
+  { name:'Marie L.', xp:1840, emoji:'🌺', me:false },
+  { name:'João P.', xp:1620, emoji:'🦅', me:false },
+  { name:'Sophie M.', xp:1200, emoji:'🌿', me:false },
+  { name:'Carlos V.', xp:980, emoji:'🐬', me:false },
+  { name:'Vous', xp:0, emoji:'🌱', me:true },
+];
+
+// ── STATE ─────────────────────────────────
+let S = {
+  xp: parseInt(localStorage.getItem('mw2-xp') || '0'),
+  streak: parseInt(localStorage.getItem('mw2-streak') || '0'),
+  captures: JSON.parse(localStorage.getItem('mw2-captures') || '[]'),
+  quests: JSON.parse(localStorage.getItem('mw2-quests') || '{}'),
+  unlocked: JSON.parse(localStorage.getItem('mw2-unlocked') || '[]'),
+  badges: JSON.parse(localStorage.getItem('mw2-badges') || '[]'),
+};
+
+let currentNTab = 'flore';
+let cameraStream = null;
+let photoDataUrl = null;
+let facingMode = 'environment';
+
+// ── INIT ──────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  renderForecast();
-  renderTrails();
-  renderPOIList('all');
-  renderSpecies('flore');
-  renderChecklist('full');
-  renderNotes();
-  renderUrgences();
-  renderQuickChecks();
-  setupOffline();
+  renderXPBar(); renderSites(); renderForecast();
+  renderDailyQuest(); renderQuests('active'); renderSpecies('flore');
+  renderBadges(); renderLeaderboard(); renderCaptures();
+  updateQBadge();
 });
 
-// ================ PAGES ================
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
-  document.getElementById('nav-' + id).classList.add('active');
-  currentPage = id;
-  window.scrollTo(0, 0);
+// ── NAV ───────────────────────────────────
+function gp(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.bnav-btn').forEach(b => b.classList.remove('on'));
+  document.getElementById('page-'+id).classList.add('on');
+  document.getElementById('nav-'+id).classList.add('on');
+  window.scrollTo(0,0);
+  if (id==='profil') renderProfil();
+  if (id==='capture') renderCaptures();
 }
 
-// ================ FORECAST ================
-function renderForecast() {
-  const mini = document.getElementById('forecast-mini');
-  mini.innerHTML = FORECAST.map(d => `
-    <div class="forecast-day ${d.today ? 'today' : ''}">
-      <div class="forecast-dow">${d.day}</div>
-      <div class="forecast-emoji">${d.emoji}</div>
-      <div class="forecast-temp">${d.temp}</div>
-    </div>
-  `).join('');
+// ── XP ────────────────────────────────────
+function getRank(xp) { let r=RANKS[0]; for(const rk of RANKS) if(xp>=rk.xp) r=rk; return r; }
+function getNextRank(xp) { for(const r of RANKS) if(xp<r.xp) return r; return null; }
+
+function renderXPBar() {
+  const rank = getRank(S.xp), next = getNextRank(S.xp);
+  const pct = next ? Math.min(100,((S.xp-rank.xp)/(next.xp-rank.xp))*100) : 100;
+  document.getElementById('xp-rank-label').textContent = rank.name;
+  document.getElementById('xp-bar-fill').style.width = pct+'%';
+  document.getElementById('xp-pts-label').textContent = next ? `${S.xp} / ${next.xp} XP` : `${S.xp} XP — Niveau max!`;
+  document.getElementById('xp-avatar').textContent = rank.emoji;
+  document.getElementById('streak-num').textContent = (S.streak>0?'🔥':'')+S.streak;
 }
 
-// ================ TRAILS ================
-function renderTrails() {
-  const list = document.getElementById('trail-list');
-  list.innerHTML = TRAILS.map(t => `
-    <div class="trail-item" onclick="openTrailModal('${t.id}')">
-      <div class="trail-icon" style="background:${t.diff==='easy'?'var(--green-mid)':t.diff==='med'?'#e9c46a':'var(--coral)'}">
-        ${t.icon}
-      </div>
-      <div class="trail-info">
-        <div class="trail-name">${t.name}</div>
-        <div class="trail-details">
-          <span>📏 ${t.dist}</span>
-          <span>⏱️ ${t.duration}</span>
-          <span>📍 ${t.region}</span>
-        </div>
-      </div>
-      <span class="difficulty diff-${t.diff}">${t.diff==='easy'?'Facile':t.diff==='med'?'Moyen':'Difficile'}</span>
-    </div>
-  `).join('');
-}
-
-// ================ POI ================
-function renderPOIList(filter) {
-  const list = document.getElementById('poi-list');
-  const filtered = filter === 'all' ? POIS : POIS.filter(p => p.type === filter);
-  list.innerHTML = filtered.map(p => `
-    <div style="background:white;border-radius:14px;padding:12px 16px;display:flex;align-items:center;gap:12px;margin-bottom:10px;box-shadow:0 2px 10px rgba(0,0,0,0.06);">
-      <div style="font-size:28px;width:40px;text-align:center;">${p.emoji}</div>
-      <div>
-        <div style="font-size:14px;font-weight:600;">${p.name}</div>
-        <div style="font-size:12px;color:var(--text-light);">${p.desc}</div>
-      </div>
-    </div>
-  `).join('');
-}
-
-function filterPOI(type, el) {
-  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
-  renderPOIList(type);
-  // Show/hide pins on SVG map
-  document.querySelectorAll('.map-pin').forEach(pin => {
-    const pt = pin.getAttribute('data-type');
-    pin.style.opacity = (type === 'all' || pt === type) ? '1' : '0.15';
-  });
-}
-
-// ================ SPECIES ================
-function switchNatureTab(tab, el) {
-  document.querySelectorAll('#page-nature button').forEach(b => {
-    b.style.background = 'white'; b.style.color = 'var(--text-mid)';
-  });
-  el.style.background = 'var(--green-mid)'; el.style.color = 'white';
-  renderSpecies(tab);
-}
-
-function renderSpecies(tab) {
-  currentNatureTab = tab;
-  const grid = document.getElementById('species-grid');
-  grid.innerHTML = SPECIES[tab].map(s => `
-    <div class="species-card" onclick="openSpeciesModal('${s.name}')">
-      <div class="species-img" style="background:${s.color}">${s.emoji}</div>
-      <div class="species-body">
-        <div class="species-name">${s.name}</div>
-        <div class="species-latin">${s.latin}</div>
-        <span class="species-tag tag-${s.tag}">${s.tag==='endemic'?'Endémique':s.tag==='rare'?'Rare':'Commun'}</span>
-      </div>
-    </div>
-  `).join('');
-}
-
-// ================ NOTES ================
-function switchCarnetTab(tab, el) {
-  document.querySelectorAll('#page-carnet button[onclick^="switchCarnetTab"]').forEach(b => {
-    b.style.background = 'white'; b.style.color = 'var(--text-mid)';
-  });
-  el.style.background = 'var(--green-mid)'; el.style.color = 'white';
-  document.getElementById('carnet-notes').style.display = tab === 'notes' ? 'block' : 'none';
-  document.getElementById('carnet-checklist').style.display = tab === 'checklist' ? 'block' : 'none';
-  document.getElementById('carnet-urgences').style.display = tab === 'urgences' ? 'block' : 'none';
-}
-
-function addNote() {
-  const input = document.getElementById('note-input');
-  const text = input.value.trim();
-  if (!text) return;
-  notes.unshift({ text, date: new Date().toLocaleDateString('fr-FR', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }) });
-  localStorage.setItem('mw-notes', JSON.stringify(notes));
-  input.value = '';
-  renderNotes();
-}
-
-function renderNotes() {
-  const list = document.getElementById('notes-list');
-  if (!notes.length) {
-    list.innerHTML = '<p style="text-align:center;color:var(--text-light);font-size:14px;padding:20px;">Aucune note pour le moment</p>';
-    return;
+function addXP(amount) {
+  const old = getRank(S.xp);
+  S.xp += amount;
+  localStorage.setItem('mw2-xp', S.xp);
+  const nw = getRank(S.xp);
+  renderXPBar();
+  if (nw.xp > old.xp) {
+    document.getElementById('levelup-rank').textContent = nw.emoji+' '+nw.name;
+    document.getElementById('levelup').classList.add('show');
   }
-  list.innerHTML = notes.map((n, i) => `
-    <div class="note-item">
-      <button class="note-del" onclick="deleteNote(${i})">✕</button>
-      <div class="note-date">${n.date}</div>
-      <div class="note-text">${n.text}</div>
-    </div>
-  `).join('');
+  LB_DATA.find(x=>x.me).xp = S.xp;
 }
 
-function deleteNote(i) {
-  notes.splice(i, 1);
-  localStorage.setItem('mw-notes', JSON.stringify(notes));
-  renderNotes();
-}
-
-// ================ CHECKLIST ================
-function renderChecklist(mode) {
-  const container = document.getElementById(mode === 'full' ? 'checklist-full' : 'quick-checks');
-  let html = '';
-  const cats = mode === 'quick' ? ['Équipement randonnée'] : Object.keys(CHECKLIST);
-  cats.forEach(cat => {
-    html += `<div class="check-section"><div class="check-title">${cat}</div>`;
-    const items = mode === 'quick' ? CHECKLIST[cat].slice(0,3) : CHECKLIST[cat];
-    items.forEach(item => {
-      const key = btoa(item);
-      const done = checks[key];
-      html += `
-        <div class="check-item ${done ? 'done' : ''}" onclick="toggleCheck('${key}', this)">
-          <div class="check-box"></div>
-          <span class="check-label">${item}</span>
-        </div>
-      `;
-    });
-    html += '</div>';
-  });
-  if (container) container.innerHTML = html;
-}
-
-function toggleCheck(key, el) {
-  checks[key] = !checks[key];
-  localStorage.setItem('mw-checks', JSON.stringify(checks));
-  el.classList.toggle('done', checks[key]);
-}
-
-function renderQuickChecks() { renderChecklist('quick'); }
-
-// ================ URGENCES ================
-function renderUrgences() {
-  document.getElementById('urgences-list').innerHTML = URGENCES.map(u => `
-    <div class="urgence-card">
-      <div class="urgence-icon ${u.color}">${u.emoji}</div>
-      <div>
-        <div class="urgence-name">${u.name}</div>
-        <div class="urgence-num">${u.num}</div>
+// ── SITES ─────────────────────────────────
+function renderSites() {
+  document.getElementById('sites-scroll').innerHTML = SITES.map(s => `
+    <div class="site-card" onclick="openSiteModal('${s.id}')">
+      <div class="site-card-photo" style="background-image:url('${s.photo}');background-color:${s.bg};">
+        <span class="site-card-xp">+${s.xp} XP</span>
       </div>
-      <a href="tel:${u.num.replace(/\s/g,'')}" class="call-btn">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013 7.82 19.79 19.79 0 01-.1 3.21 2 2 0 014.11 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
-        </svg>
-      </a>
-    </div>
-  `).join('');
+      <div class="site-card-overlay">
+        <div class="site-card-name">${s.name}</div>
+        <div class="site-card-sub">${s.sub}</div>
+      </div>
+    </div>`).join('');
 }
 
-// ================ MODALS ================
-function openModal(id) {
-  const data = MODAL_DATA[id];
-  if (!data) return;
+function openSiteModal(id) {
+  const s = SITES.find(x=>x.id===id);
+  const claimed = S.quests['site_'+id];
   document.getElementById('modal-body').innerHTML = `
-    <span class="modal-emoji">${data.emoji}</span>
-    <div class="modal-title">${data.title}</div>
-    <div class="modal-subtitle">${data.subtitle}</div>
-    <div class="info-grid">
-      ${data.infos.map(i => `<div class="info-cell"><div class="info-cell-label">${i.label}</div><div class="info-cell-val">${i.val}</div></div>`).join('')}
-    </div>
-    <div class="modal-desc">${data.desc}</div>
-    <div style="font-size:13px;font-weight:700;color:var(--text-mid);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">💡 Conseils pratiques</div>
-    <ul class="tips-list">
-      ${data.tips.map(t => `<li><span style="margin-right:6px;">→</span>${t}</li>`).join('')}
-    </ul>
-  `;
-  document.getElementById('modal-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function openTrailModal(id) {
-  const t = TRAILS.find(x => x.id === id);
-  if (!t) return;
-  document.getElementById('modal-body').innerHTML = `
-    <span class="modal-emoji">${t.icon}</span>
-    <div class="modal-title">${t.name}</div>
-    <div class="modal-subtitle">${t.region} · ${t.dist} · ${t.duration}</div>
-    <div class="info-grid">
-      <div class="info-cell"><div class="info-cell-label">Distance</div><div class="info-cell-val">${t.dist}</div></div>
-      <div class="info-cell"><div class="info-cell-label">Durée</div><div class="info-cell-val">${t.duration}</div></div>
-      <div class="info-cell"><div class="info-cell-label">Dénivelé</div><div class="info-cell-val">+${t.elev}</div></div>
-      <div class="info-cell"><div class="info-cell-label">Difficulté</div><div class="info-cell-val">${t.diff==='easy'?'Facile':t.diff==='med'?'Moyen':'Difficile'}</div></div>
-    </div>
-    <div class="modal-desc">${t.desc}</div>
-    <div style="font-size:13px;font-weight:700;color:var(--text-mid);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">💡 Conseils</div>
-    <ul class="tips-list">
-      ${t.tips.map(tip => `<li><span style="margin-right:6px;">→</span>${tip}</li>`).join('')}
-    </ul>
-  `;
-  document.getElementById('modal-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function openSpeciesModal(name) {
-  const all = [...SPECIES.flore, ...SPECIES.faune, ...SPECIES.oiseaux];
-  const s = all.find(x => x.name === name);
-  if (!s) return;
-  document.getElementById('modal-body').innerHTML = `
-    <div style="font-size:72px;text-align:center;margin-bottom:12px;">${s.emoji}</div>
+    <div class="real-photo-frame" style="background-image:url('${s.photo}');background-color:${s.bg};"></div>
+    <div class="xp-banner"><div><div class="xp-banner-txt">Récompense visite</div></div><div class="xp-banner-val">+${s.xp} XP</div></div>
     <div class="modal-title">${s.name}</div>
-    <div class="modal-subtitle" style="font-style:italic;">${s.latin}</div>
-    <span class="species-tag tag-${s.tag}" style="margin-bottom:16px;display:inline-block;font-size:13px;">${s.tag==='endemic'?'Endémique de Madère':s.tag==='rare'?'Espèce rare — protégée':'Espèce commune'}</span>
-    <div class="modal-desc">
-      ${s.tag === 'endemic' ? 'Cette espèce est <strong>endémique de Madère</strong> — elle ne se trouve nulle part ailleurs dans le monde. Sa présence est un témoignage vivant de l\'isolement géologique de l\'île depuis des millions d\'années.' : s.tag === 'rare' ? 'Cette espèce est classée comme <strong>vulnérable ou menacée</strong>. Si vous avez la chance de l\'observer, gardez vos distances et ne perturbez pas son habitat.' : 'Espèce régulièrement observée sur l\'île de Madère, souvent dans les jardins, forêts et zones côtières.'}
+    <div class="modal-sub">${s.sub}</div>
+    <div class="info-pills">${s.infos.map(i=>`<div class="info-pill"><div class="info-pill-label">${i.l}</div><div class="info-pill-val">${i.v}</div></div>`).join('')}</div>
+    <div class="modal-desc">${s.desc}</div>
+    <p style="font-size:12px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">💡 Conseils pratiques</p>
+    <ul class="tips">${s.tips.map(t=>`<li><span>→</span>${t}</li>`).join('')}</ul>
+    <button onclick="${claimed?'':\"claimSiteXP('\"+id+\"','\"+s.name+\"',\"+s.xp+\")\"}"
+      style="width:100%;margin-top:18px;padding:14px;background:${claimed?'#e8e8e8':'var(--moss)'};color:${claimed?'#999':'white'};border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:${claimed?'default':'pointer'};">
+      ${claimed?'✅ Déjà visité':'📍 J\'y suis — Réclamer +'+s.xp+' XP'}
+    </button>`;
+  openModal();
+}
+
+function claimSiteXP(id,name,xp) {
+  S.quests['site_'+id]=true; localStorage.setItem('mw2-quests',JSON.stringify(S.quests));
+  addXP(xp); closeModal(); showToast('📍',`${name} visité !`,`+${xp} XP gagnés`);
+}
+
+// ── FORECAST ──────────────────────────────
+function renderForecast() {
+  document.getElementById('forecast').innerHTML = FORECAST_DATA.map(d=>
+    `<div class="fc-day ${d.today?'today':''}"><div class="fc-dow">${d.d}</div><div class="fc-emoji">${d.e}</div><div class="fc-temp">${d.t}</div></div>`).join('');
+}
+
+// ── QUESTS ────────────────────────────────
+function renderDailyQuest() {
+  const q = QUESTS[0];
+  document.getElementById('daily-quest').innerHTML = renderQHTML(q);
+}
+function renderQHTML(q) {
+  const prog = S.quests['prog_'+q.id]||0, done = S.quests['done_'+q.id], pct = Math.min(100,(prog/q.total)*100);
+  return `<div class="quest-item q-${q.diff} ${done?'done':''}" onclick="openQuestModal('${q.id}')">
+    <div class="quest-icon" style="background:${q.diff==='easy'?'var(--dew)':q.diff==='med'?'#fff3cd':'#fde8e4'}">${q.emoji}</div>
+    <div class="quest-info"><div class="quest-name">${q.name}</div><div class="quest-desc">${q.desc}</div>
+    <span style="font-size:11px;color:#aaa;margin-top:4px;display:block;">${done?'Terminée ✅':prog+'/'+q.total}</span>
+    <div class="quest-pbar"><div class="quest-pfill" style="width:${pct}%"></div></div></div>
+    <div class="quest-reward">⭐${q.xp}</div></div>`;
+}
+function switchQTab(tab,el) {
+  document.querySelectorAll('#page-quests button').forEach(b=>{b.style.background='white';b.style.color='#888';});
+  el.style.background='var(--moss)'; el.style.color='white';
+  renderQuests(tab);
+}
+function renderQuests(tab) {
+  const list = document.getElementById('quest-list');
+  const filtered = tab==='done' ? QUESTS.filter(q=>S.quests['done_'+q.id]) : QUESTS.filter(q=>!S.quests['done_'+q.id]);
+  if(!filtered.length) { list.innerHTML=`<p style="text-align:center;color:#bbb;padding:30px;font-size:14px;">${tab==='done'?'Aucune quête terminée.':'Toutes les quêtes sont complétées ! 🏆'}</p>`; return; }
+  list.innerHTML = filtered.map(q=>renderQHTML(q)).join('');
+}
+function openQuestModal(id) {
+  const q = QUESTS.find(x=>x.id===id), prog=S.quests['prog_'+q.id]||0, done=S.quests['done_'+q.id], pct=Math.min(100,(prog/q.total)*100);
+  document.getElementById('modal-body').innerHTML = `
+    <div style="font-size:64px;text-align:center;margin-bottom:12px;">${q.emoji}</div>
+    <div class="modal-title">${q.name}</div><div class="modal-sub">${q.desc}</div>
+    <div class="xp-banner"><div><div class="xp-banner-txt">Récompense</div></div><div class="xp-banner-val">+${q.xp} XP</div></div>
+    <div style="background:white;border-radius:14px;padding:14px 16px;margin-bottom:16px;">
+      <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;"><span style="font-weight:600;">Progression</span><span style="color:var(--moss);font-weight:700;">${done?'✅ Terminée':prog+'/'+q.total}</span></div>
+      <div class="quest-pbar" style="height:8px;"><div class="quest-pfill" style="width:${pct}%"></div></div>
     </div>
-    <div style="background:var(--green-dark);border-radius:12px;padding:14px;color:white;font-size:13px;line-height:1.6;">
-      🔍 <strong>Où l'observer ?</strong><br>
-      ${s.tag === 'endemic' ? 'Forêt Laurissilva, sentiers des levadas, zones protégées du Parc Naturel de Madère.' : 'Toute l\'île — jardins botaniques, parcs, littoral et zones forestières.'}
-    </div>
-  `;
-  document.getElementById('modal-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
+    ${!done?`<button onclick="progressQuest('${q.id}');closeModal();" style="width:100%;padding:14px;background:var(--moss);color:white;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;">📸 Valider une étape (+1)</button>`
+    :`<div style="text-align:center;color:var(--moss);font-size:16px;font-weight:700;padding:10px;">Quête terminée ! 🎉</div>`}`;
+  openModal();
+}
+function progressQuest(id) {
+  const q=QUESTS.find(x=>x.id===id), prog=(S.quests['prog_'+id]||0)+1;
+  S.quests['prog_'+id]=prog;
+  if(prog>=q.total && !S.quests['done_'+id]) { S.quests['done_'+id]=true; addXP(q.xp); showToast('🏆','Quête terminée!',`${q.name} — +${q.xp} XP`); }
+  else { showToast('✅','Progression +1!',`${prog}/${q.total} étapes`); }
+  localStorage.setItem('mw2-quests',JSON.stringify(S.quests));
+  renderQuests('active'); renderDailyQuest(); updateQBadge();
+}
+function updateQBadge() {
+  const n=QUESTS.filter(q=>!S.quests['done_'+q.id]).length, b=document.getElementById('quest-badge');
+  b.style.display=n?'flex':'none'; b.textContent=n;
 }
 
-function closeModal() {
-  document.getElementById('modal-overlay').classList.remove('open');
-  document.body.style.overflow = '';
+// ── SPECIES ───────────────────────────────
+function switchNTab(tab,el) {
+  document.querySelectorAll('#page-explorer button').forEach(b=>{b.style.background='white';b.style.color='#888';});
+  el.style.background='var(--moss)'; el.style.color='white';
+  currentNTab=tab; renderSpecies(tab);
+}
+function renderSpecies(tab) {
+  const list=SPECIES[tab];
+  document.getElementById('species-grid').innerHTML = list.map(s=>{
+    const unlocked=!s.locked||S.unlocked.includes(s.id);
+    return `<div class="spec-card" onclick="openSpeciesModal('${s.id}')">
+      ${unlocked?`<div class="spec-img-emoji" style="background:${s.color}">${s.emoji}</div>`
+        :`<div class="spec-img-emoji" style="background:#e0e0e0;position:relative;"><span style="font-size:52px;filter:grayscale(1);opacity:0.25">${s.emoji}</span><div class="spec-locked">🔒</div></div>`}
+      ${S.unlocked.includes(s.id)?'<span class="spec-captured">Capturé ✓</span>':''}
+      <div class="spec-body"><div class="spec-name">${unlocked?s.name:'???'}</div>
+      <div class="spec-latin">${unlocked?s.latin:'Espèce à découvrir'}</div>
+      <span class="spec-tag tag-${s.tag}">${s.tag==='e'?'Endémique':s.tag==='r'?'Rare':'Commun'}</span></div></div>`;
+  }).join('');
+}
+function openSpeciesModal(id) {
+  const all=[...SPECIES.flore,...SPECIES.faune,...SPECIES.oiseaux], s=all.find(x=>x.id===id);
+  const unlocked=!s.locked||S.unlocked.includes(s.id);
+  document.getElementById('modal-body').innerHTML = `
+    <div style="height:160px;border-radius:16px;background:${s.color};display:flex;align-items:center;justify-content:center;font-size:80px;margin-bottom:18px;">${unlocked?s.emoji:'🔒'}</div>
+    <div class="modal-title">${unlocked?s.name:'Espèce inconnue'}</div>
+    <div class="modal-sub" style="font-style:italic;">${unlocked?s.latin:'Capturez-la pour découvrir sa fiche'}</div>
+    <div class="xp-banner"><div><div class="xp-banner-txt">XP pour capture</div></div><div class="xp-banner-val">+${s.xp} XP</div></div>
+    ${unlocked?`<div class="modal-desc">${s.desc}</div>`:
+    `<div style="text-align:center;padding:20px;color:#bbb;font-size:14px;">Photographiez cette espèce pour débloquer sa fiche complète.</div>
+     <button onclick="closeModal();gp('capture');" style="width:100%;padding:14px;background:var(--moss);color:white;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;">📷 Aller capturer →</button>`}`;
+  openModal();
 }
 
-function closeModalIfOverlay(e) {
-  if (e.target === document.getElementById('modal-overlay')) closeModal();
+// ── CAMERA ────────────────────────────────
+async function startCamera() {
+  if(cameraStream) return;
+  const preview=document.getElementById('cam-preview'), video=document.getElementById('cam-video');
+  try {
+    cameraStream=await navigator.mediaDevices.getUserMedia({video:{facingMode,width:{ideal:1280},height:{ideal:720}}});
+    video.srcObject=cameraStream; video.style.display='block';
+    preview.querySelector('.cam-icon').style.display='none';
+    preview.querySelector('.cam-hint').style.display='none';
+    document.getElementById('cam-frame').style.display='block';
+    document.getElementById('btn-shoot').style.display='flex';
+    document.getElementById('shoot-placeholder').style.display='none';
+  } catch(e) { showToast('⚠️','Caméra indisponible','Vérifiez les permissions'); }
+}
+async function switchCamera() {
+  if(cameraStream){cameraStream.getTracks().forEach(t=>t.stop());cameraStream=null;}
+  facingMode=facingMode==='environment'?'user':'environment';
+  const v=document.getElementById('cam-video'); v.style.display='none';
+  document.getElementById('cam-frame').style.display='none';
+  document.getElementById('btn-shoot').style.display='none';
+  document.getElementById('shoot-placeholder').style.display='flex';
+  document.getElementById('cam-preview').querySelector('.cam-icon').style.display='block';
+  document.getElementById('cam-preview').querySelector('.cam-hint').style.display='block';
+  await startCamera();
+}
+function shootPhoto() {
+  const video=document.getElementById('cam-video'), canvas=document.getElementById('cam-canvas');
+  if(!cameraStream||!video.videoWidth) return;
+  canvas.width=video.videoWidth; canvas.height=video.videoHeight;
+  canvas.getContext('2d').drawImage(video,0,0);
+  photoDataUrl=canvas.toDataURL('image/jpeg',0.82);
+  canvas.style.display='block';
+  document.body.style.background='white'; setTimeout(()=>document.body.style.background='',80);
+  document.getElementById('ai-btn').disabled=false;
+  showToast('📷','Photo capturée !','Appuyez sur "Identifier" pour analyser');
+}
+function pickFromGallery(){ document.getElementById('gallery-input').click(); }
+function loadGalleryPhoto(e) {
+  const file=e.target.files[0]; if(!file) return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    photoDataUrl=ev.target.result;
+    const canvas=document.getElementById('cam-canvas'), img=new Image();
+    img.onload=()=>{ canvas.width=img.width;canvas.height=img.height;canvas.getContext('2d').drawImage(img,0,0);canvas.style.display='block';document.getElementById('cam-video').style.display='none'; };
+    img.src=photoDataUrl;
+    document.getElementById('ai-btn').disabled=false;
+    showToast('🖼️','Photo chargée !','Appuyez sur "Identifier"');
+  };
+  r.readAsDataURL(file);
 }
 
-// ================ GPS ================
-function locateMe() {
-  if (!navigator.geolocation) {
-    alert('Géolocalisation non disponible sur cet appareil');
-    return;
+async function detectSpecies() {
+  if(!photoDataUrl){showToast('⚠️','Prenez une photo d\'abord','');return;}
+  const btn=document.getElementById('ai-btn');
+  btn.textContent='🔍 Analyse en cours…'; btn.disabled=true;
+  const allS=[...SPECIES.flore,...SPECIES.faune,...SPECIES.oiseaux];
+  const specList=allS.map(s=>`${s.name} (${s.latin})`).join(', ');
+  try {
+    const base64=photoDataUrl.split(',')[1];
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514', max_tokens:1000,
+        messages:[{role:'user',content:[
+          {type:'image',source:{type:'base64',media_type:'image/jpeg',data:base64}},
+          {type:'text',text:`Tu es un naturaliste expert sur l'île de Madère. Analyse cette photo. Réponds UNIQUEMENT en JSON valide sans markdown:\n{"found":true,"name":"Nom commun français","latin":"Nom scientifique","confidence":0-100,"category":"flore|faune|oiseaux","endemic":true/false,"description":"2 phrases sur ce que l'on voit","tips":"Un conseil d'observation court","xp":10-100}\n\nSi aucune espèce naturelle identifiable: {"found":false,"message":"Explication courte"}\n\nEspèces endémiques Madère pour référence: ${specList}`}
+        ]}]
+      })
+    });
+    const data=await resp.json();
+    const raw=data.content?.[0]?.text||'{"found":false}';
+    let result;
+    try{result=JSON.parse(raw.replace(/```json|```/g,'').trim());}catch{result={found:false,message:'Erreur d\'analyse'};}
+    btn.textContent='🔍 Identifier l\'espèce avec l\'IA'; btn.disabled=false;
+    if(!result.found){showToast('🔍','Aucune espèce détectée',result.message||'Essayez de cadrer une plante ou un animal');return;}
+    const capture={id:Date.now(),name:result.name,latin:result.latin,category:result.category,endemic:result.endemic,confidence:result.confidence,description:result.description,xp:result.xp||30,photo:photoDataUrl,date:new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})};
+    S.captures.unshift(capture);
+    localStorage.setItem('mw2-captures',JSON.stringify(S.captures.slice(0,50)));
+    const matched=allS.find(s=>s.name.toLowerCase().includes(result.name.toLowerCase())||result.name.toLowerCase().includes(s.name.toLowerCase()));
+    if(matched&&!S.unlocked.includes(matched.id)){S.unlocked.push(matched.id);localStorage.setItem('mw2-unlocked',JSON.stringify(S.unlocked));}
+    // First capture quest
+    if(!S.quests['prog_q1']){S.quests['prog_q1']=1;S.quests['done_q1']=true;localStorage.setItem('mw2-quests',JSON.stringify(S.quests));}
+    addXP(capture.xp); checkBadges(); renderCaptures();
+    document.getElementById('modal-body').innerHTML=`
+      <div style="background:${result.endemic?'var(--dew)':'#f0f8f4'};border-radius:16px;padding:20px;text-align:center;margin-bottom:18px;">
+        <div style="font-size:13px;color:var(--moss);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;">${result.confidence}% de confiance</div>
+        <div style="font-size:30px;font-weight:800;color:var(--ink);">${result.name}</div>
+        <div style="font-size:13px;font-style:italic;color:#888;margin-top:4px;">${result.latin}</div>
+        ${result.endemic?'<div style="margin-top:10px;"><span style="background:var(--dew);color:var(--moss);font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px;text-transform:uppercase;">Endémique de Madère</span></div>':''}
+      </div>
+      <img src="${photoDataUrl}" style="width:100%;height:180px;border-radius:14px;object-fit:cover;margin-bottom:16px;">
+      <div class="xp-banner"><div><div class="xp-banner-txt">XP gagnés</div></div><div class="xp-banner-val">+${capture.xp} XP</div></div>
+      <div class="modal-desc">${result.description||''}</div>
+      ${result.tips?`<div style="background:white;border-radius:12px;padding:12px 14px;font-size:13px;color:#555;"><strong>💡</strong> ${result.tips}</div>`:''}
+      <button onclick="closeModal()" style="width:100%;margin-top:18px;padding:14px;background:var(--moss);color:white;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;">Continuer l'exploration →</button>`;
+    openModal();
+  } catch(e){
+    btn.textContent='🔍 Identifier l\'espèce avec l\'IA'; btn.disabled=false;
+    showToast('⚠️','Erreur réseau','Vérifiez votre connexion Internet');
   }
-  const btn = document.querySelector('.gps-btn');
-  btn.style.background = 'var(--gold)';
-  navigator.geolocation.getCurrentPosition(
-    pos => {
-      btn.style.background = 'var(--green-light)';
-      const { latitude, longitude } = pos.coords;
-      alert(`📍 Votre position :\nLat: ${latitude.toFixed(4)}\nLng: ${longitude.toFixed(4)}\n\nMadère est entre 32.6°N–33°N, 16.8°W–17.3°W`);
-    },
-    err => {
-      btn.style.background = 'var(--coral)';
-      alert('Impossible de récupérer votre position. Vérifiez les permissions GPS.');
-    },
-    { enableHighAccuracy: true, timeout: 8000 }
-  );
 }
 
-// ================ OFFLINE ================
-function setupOffline() {
-  window.addEventListener('online', () => document.body.classList.remove('offline'));
-  window.addEventListener('offline', () => document.body.classList.add('offline'));
-  if (!navigator.onLine) document.body.classList.add('offline');
+function renderCaptures() {
+  const grid=document.getElementById('captures-grid'), count=document.getElementById('captures-count');
+  count.textContent=S.captures.length+' capture(s)';
+  if(!S.captures.length){grid.innerHTML='<div style="grid-column:span 3;text-align:center;padding:30px;color:#bbb;font-size:14px;">Aucune capture — prenez votre première photo ! 📷</div>';return;}
+  grid.innerHTML=S.captures.map((c,i)=>`<div class="capture-thumb" onclick="openCaptureModal(${i})"><img src="${c.photo}" loading="lazy"><div class="capture-thumb-label">${c.name}</div></div>`).join('');
+}
+function openCaptureModal(i) {
+  const c=S.captures[i];
+  document.getElementById('modal-body').innerHTML=`
+    <img src="${c.photo}" style="width:100%;height:220px;border-radius:16px;object-fit:cover;margin-bottom:16px;">
+    <div class="modal-title">${c.name}</div><div class="modal-sub" style="font-style:italic;">${c.latin} · ${c.date}</div>
+    <div class="info-pills">
+      <div class="info-pill"><div class="info-pill-label">Catégorie</div><div class="info-pill-val">${c.category}</div></div>
+      <div class="info-pill"><div class="info-pill-label">Confiance IA</div><div class="info-pill-val">${c.confidence}%</div></div>
+      <div class="info-pill"><div class="info-pill-label">XP</div><div class="info-pill-val">+${c.xp}</div></div>
+      ${c.endemic?'<div class="info-pill"><div class="info-pill-label">Statut</div><div class="info-pill-val">🌿 Endémique</div></div>':''}
+    </div>
+    <div class="modal-desc">${c.description||''}</div>
+    <button onclick="deleteCapture(${i});closeModal();" style="width:100%;padding:12px;background:#fde8e4;color:var(--coral);border:none;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;margin-top:8px;">🗑️ Supprimer</button>`;
+  openModal();
+}
+function deleteCapture(i){ S.captures.splice(i,1); localStorage.setItem('mw2-captures',JSON.stringify(S.captures)); renderCaptures(); showToast('🗑️','Capture supprimée',''); }
+
+// ── PROFIL ────────────────────────────────
+function renderProfil() {
+  const rank=getRank(S.xp);
+  document.getElementById('prof-avatar').textContent=rank.emoji;
+  document.getElementById('prof-rank').textContent='⭐ '+rank.name;
+  document.getElementById('stat-xp').textContent=S.xp;
+  document.getElementById('stat-captures').textContent=S.captures.length;
+  document.getElementById('stat-quests').textContent=QUESTS.filter(q=>S.quests['done_'+q.id]).length;
+  document.getElementById('stat-streak').textContent=S.streak;
+  renderBadges(); renderLeaderboard();
+}
+function renderBadges() {
+  document.getElementById('badges-grid').innerHTML=BADGES.map(b=>`
+    <div class="badge ${S.badges.includes(b.id)?'earned':'locked'}" onclick="showToast('${b.emoji}','${b.name}','${b.desc}')">
+      <div class="badge-icon">${b.emoji}</div><div class="badge-name">${b.name}</div>
+    </div>`).join('');
+}
+function renderLeaderboard() {
+  LB_DATA.find(x=>x.me).xp=S.xp;
+  const sorted=[...LB_DATA].sort((a,b)=>b.xp-a.xp);
+  document.getElementById('leaderboard').innerHTML=sorted.map((p,i)=>`
+    <div class="lb-item ${p.me?'lb-me':''}">
+      <div class="lb-rank ${i===0?'gold':i===1?'silver':i===2?'bronze':''}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div>
+      <div class="lb-avatar" style="background:${p.me?'var(--dew)':'#f5f5f5'}">${p.emoji}</div>
+      <div class="lb-name">${p.name}${p.me?' (Vous)':''}</div>
+      <div class="lb-xp">${p.xp} XP</div>
+    </div>`).join('');
 }
 
-// ================ PWA INSTALL ================
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  deferredPrompt = e;
-  document.getElementById('install-banner').classList.add('show');
-});
-
-document.getElementById('btn-install-app').addEventListener('click', async () => {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();
-  const { outcome } = await deferredPrompt.userChoice;
-  deferredPrompt = null;
-  document.getElementById('install-banner').classList.remove('show');
-});
-
-function dismissInstall() {
-  document.getElementById('install-banner').classList.remove('show');
+// ── BADGES CHECK ─────────────────────────
+function checkBadges() {
+  const to=[], tc=S.captures.length, fl=S.captures.filter(c=>c.category==='flore').length, oi=S.captures.filter(c=>c.category==='oiseaux').length;
+  if(tc>=1&&!S.badges.includes('b1')) to.push('b1');
+  if(fl>=3&&!S.badges.includes('b2')) to.push('b2');
+  if(oi>=3&&!S.badges.includes('b4')) to.push('b4');
+  if(S.unlocked.length>=8&&!S.badges.includes('b6')) to.push('b6');
+  if(S.unlocked.length>=10&&!S.badges.includes('b7')) to.push('b7');
+  to.forEach(bid=>{S.badges.push(bid);const b=BADGES.find(x=>x.id===bid);setTimeout(()=>showToast(b.emoji,'Badge débloqué!',b.name),800);});
+  if(to.length) localStorage.setItem('mw2-badges',JSON.stringify(S.badges));
 }
 
-window.addEventListener('appinstalled', () => {
-  document.getElementById('install-banner').classList.remove('show');
-});
+// ── MODAL ─────────────────────────────────
+function openModal(){ document.getElementById('modal').classList.add('on'); document.body.style.overflow='hidden'; }
+function closeModal(){ document.getElementById('modal').classList.remove('on'); document.body.style.overflow=''; }
+function closeModalIf(e){ if(e.target===document.getElementById('modal')) closeModal(); }
 
-// ================ SERVICE WORKER ================
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').then(reg => {
-    console.log('SW registered');
-  }).catch(err => console.log('SW error:', err));
+// ── TOAST ─────────────────────────────────
+let tt;
+function showToast(emoji,title,sub){
+  const t=document.getElementById('toast');
+  document.getElementById('toast-emoji').textContent=emoji;
+  document.getElementById('toast-title').textContent=title;
+  document.getElementById('toast-sub').textContent=sub;
+  t.classList.add('show'); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove('show'),3000);
 }
+
+// ── OFFLINE ───────────────────────────────
+window.addEventListener('online',()=>document.body.classList.remove('offline'));
+window.addEventListener('offline',()=>document.body.classList.add('offline'));
+if(!navigator.onLine) document.body.classList.add('offline');
+if('serviceWorker'in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
 </html>
