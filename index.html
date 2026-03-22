@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#1a3a2a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="Explorez Madère — guide de voyage nature hors ligne">
+<title>Madeira Wild</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-deep: #0f2318;
+    --green-dark: #1a3a2a;
+    --green-mid: #2d6a4f;
+    --green-light: #52b788;
+    --green-pale: #b7e4c7;
+    --cream: #f4f0e6;
+    --cream-dark: #e8e2d4;
+    --gold: #d4a843;
+    --coral: #e07a5f;
+    --blue-ocean: #2196a6;
+    --text-dark: #1a1a1a;
+    --text-mid: #4a4a4a;
+    --text-light: #888;
+    --radius: 16px;
+    --nav-h: 68px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+
+  /* NAV BOTTOM */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+    height: var(--nav-h);
+    background: var(--green-deep);
+    display: flex; align-items: stretch;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .nav-item {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 4px; cursor: pointer; padding: 8px 4px;
+    transition: all 0.2s;
+    border: none; background: none; color: rgba(255,255,255,0.45);
+  }
+  .nav-item.active { color: var(--green-light); }
+  .nav-item svg { width: 22px; height: 22px; }
+  .nav-label { font-size: 10px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; }
+
+  /* PAGES */
+  .page {
+    display: none; min-height: 100dvh;
+    padding-bottom: calc(var(--nav-h) + 16px);
+  }
+  .page.active { display: block; }
+
+  /* HERO */
+  .hero {
+    position: relative; height: 55vh; min-height: 320px;
+    background: linear-gradient(160deg, var(--green-deep) 0%, var(--green-mid) 60%, #3d8b68 100%);
+    overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 28px 24px;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; opacity: 0.15;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cellipse cx='100' cy='120' rx='90' ry='70' fill='%2352b788' opacity='0.4'/%3E%3Cellipse cx='30' cy='50' rx='40' ry='55' fill='%2352b788' opacity='0.3'/%3E%3Cellipse cx='170' cy='40' rx='35' ry='50' fill='%2552b788' opacity='0.25'/%3E%3C/svg%3E");
+    background-size: 300px;
+  }
+  .hero-wave {
+    position: absolute; bottom: -1px; left: 0; right: 0;
+  }
+  .hero-tag {
+    display: inline-block; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.2); border-radius: 20px;
+    padding: 4px 14px; font-size: 11px; color: var(--green-pale);
+    letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px;
+    width: fit-content;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(34px, 9vw, 52px);
+    color: var(--cream); line-height: 1.05;
+    text-shadow: 0 4px 24px rgba(0,0,0,0.3);
+  }
+  .hero h1 em { font-style: italic; color: var(--green-light); }
+  .hero-sub {
+    margin-top: 8px; color: rgba(255,255,255,0.65);
+    font-size: 14px; font-weight: 300;
+  }
+  .weather-pill {
+    position: absolute; top: 20px; right: 20px;
+    background: rgba(255,255,255,0.12); backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.2); border-radius: 12px;
+    padding: 10px 14px; text-align: right; color: white;
+  }
+  .weather-temp { font-size: 26px; font-weight: 700; line-height: 1; }
+  .weather-desc { font-size: 11px; opacity: 0.7; margin-top: 2px; }
+
+  /* SECTIONS */
+  .section { padding: 20px 16px 0; }
+  .section-header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 14px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px; color: var(--green-deep);
+  }
+  .section-link { font-size: 13px; color: var(--green-mid); text-decoration: none; font-weight: 500; }
+
+  /* CARDS SCROLL */
+  .cards-scroll {
+    display: flex; gap: 12px; overflow-x: auto;
+    padding: 0 16px 8px; margin: 0 -16px;
+    scrollbar-width: none;
+  }
+  .cards-scroll::-webkit-scrollbar { display: none; }
+
+  .card {
+    flex-shrink: 0; width: 200px; border-radius: var(--radius);
+    overflow: hidden; cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    background: white;
+  }
+  .card:active { transform: scale(0.97); }
+  .card-img {
+    height: 130px; position: relative;
+    background: var(--green-mid);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 56px;
+    overflow: hidden;
+  }
+  .card-img::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 50%;
+    background: linear-gradient(transparent, rgba(0,0,0,0.35));
+  }
+  .card-badge {
+    position: absolute; top: 8px; right: 8px; z-index: 1;
+    background: var(--gold); color: white;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+    padding: 3px 8px; border-radius: 6px; text-transform: uppercase;
+  }
+  .card-body { padding: 12px; }
+  .card-name { font-size: 14px; font-weight: 600; color: var(--text-dark); line-height: 1.3; }
+  .card-meta { font-size: 12px; color: var(--text-light); margin-top: 4px; display: flex; align-items: center; gap: 6px; }
+  .card-meta span { display: flex; align-items: center; gap: 3px; }
+
+  /* LEVADA TRAILS */
+  .trail-list { display: flex; flex-direction: column; gap: 10px; }
+  .trail-item {
+    background: white; border-radius: var(--radius);
+    padding: 14px 16px; display: flex; align-items: center; gap: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07); cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .trail-item:active { transform: scale(0.98); }
+  .trail-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: var(--green-mid); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+  }
+  .trail-info { flex: 1; min-width: 0; }
+  .trail-name { font-size: 15px; font-weight: 600; color: var(--text-dark); }
+  .trail-details { font-size: 12px; color: var(--text-light); margin-top: 3px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .trail-details span { display: flex; align-items: center; gap: 3px; }
+  .difficulty {
+    font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 8px;
+    text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0;
+  }
+  .diff-easy { background: #d8f3dc; color: #2d6a4f; }
+  .diff-med { background: #fff3cd; color: #856404; }
+  .diff-hard { background: #fde8e4; color: #c0392b; }
+
+  /* MAP PLACEHOLDER */
+  .map-container {
+    background: var(--green-deep);
+    border-radius: var(--radius);
+    overflow: hidden;
+    position: relative;
+    height: 320px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .map-svg {
+    width: 100%; height: 100%; opacity: 0.9;
+  }
+  .map-overlay {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 8px; pointer-events: none;
+  }
+  .gps-btn {
+    position: absolute; bottom: 16px; right: 16px;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--green-light); border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 16px rgba(82,183,136,0.4);
+    color: white; pointer-events: all;
+    transition: transform 0.15s;
+  }
+  .gps-btn:active { transform: scale(0.92); }
+
+  /* FULL MAP PAGE */
+  #page-map .map-container { height: calc(100dvh - var(--nav-h) - 120px); border-radius: var(--radius); }
+
+  /* POI PINS */
+  .poi-filters {
+    display: flex; gap: 8px; overflow-x: auto; padding: 0 16px 0;
+    margin: 0 -16px 16px; scrollbar-width: none;
+  }
+  .poi-filters::-webkit-scrollbar { display: none; }
+  .filter-chip {
+    flex-shrink: 0; padding: 7px 14px; border-radius: 20px;
+    border: 1.5px solid var(--cream-dark); background: white;
+    font-size: 12px; font-weight: 500; cursor: pointer;
+    color: var(--text-mid); transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .filter-chip.active {
+    background: var(--green-mid); border-color: var(--green-mid);
+    color: white;
+  }
+
+  /* METEO PAGE */
+  .weather-card {
+    background: linear-gradient(135deg, var(--green-dark) 0%, var(--blue-ocean) 100%);
+    border-radius: 20px; padding: 24px; color: white; margin-bottom: 16px;
+  }
+  .weather-main { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .weather-big-temp { font-size: 64px; font-weight: 300; line-height: 1; }
+  .weather-icon { font-size: 64px; }
+  .weather-row { display: flex; gap: 16px; flex-wrap: wrap; }
+  .weather-stat {
+    flex: 1; min-width: 70px; background: rgba(255,255,255,0.1);
+    border-radius: 12px; padding: 12px; text-align: center;
+  }
+  .weather-stat-val { font-size: 18px; font-weight: 600; }
+  .weather-stat-label { font-size: 11px; opacity: 0.7; margin-top: 2px; }
+  .forecast-scroll { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
+  .forecast-scroll::-webkit-scrollbar { display: none; }
+  .forecast-day {
+    flex-shrink: 0; width: 72px; background: white;
+    border-radius: 14px; padding: 12px 8px; text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  }
+  .forecast-day.today { background: var(--green-mid); color: white; }
+  .forecast-dow { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.7; }
+  .forecast-emoji { font-size: 24px; margin: 6px 0; }
+  .forecast-temp { font-size: 14px; font-weight: 600; }
+
+  /* CARNET */
+  .memo-editor {
+    background: white; border-radius: var(--radius);
+    padding: 16px; margin-bottom: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  }
+  .memo-textarea {
+    width: 100%; border: none; outline: none; resize: none;
+    font-family: 'DM Sans', sans-serif; font-size: 15px;
+    color: var(--text-dark); min-height: 100px; line-height: 1.6;
+    background: transparent;
+  }
+  .memo-actions { display: flex; gap: 8px; margin-top: 10px; justify-content: flex-end; }
+  .btn { padding: 9px 18px; border-radius: 10px; border: none; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.15s; }
+  .btn-primary { background: var(--green-mid); color: white; }
+  .btn-primary:active { background: var(--green-deep); }
+  .btn-outline { background: transparent; border: 1.5px solid var(--green-mid); color: var(--green-mid); }
+  .note-item {
+    background: white; border-radius: var(--radius);
+    padding: 14px 16px; margin-bottom: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    border-left: 3px solid var(--green-light);
+  }
+  .note-date { font-size: 11px; color: var(--text-light); margin-bottom: 4px; }
+  .note-text { font-size: 14px; line-height: 1.5; }
+  .note-del { float: right; background: none; border: none; color: var(--text-light); cursor: pointer; font-size: 16px; }
+
+  /* OFFLINE BANNER */
+  .offline-banner {
+    display: none; position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+    background: var(--coral); color: white; text-align: center;
+    padding: 10px 16px; font-size: 13px; font-weight: 600;
+  }
+  body.offline .offline-banner { display: block; }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 300;
+    background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+    padding: 20px 16px; overflow-y: auto;
+    align-items: flex-end;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--cream); border-radius: 24px 24px 0 0;
+    width: 100%; max-width: 600px; margin: auto auto 0;
+    padding: 28px 20px 32px;
+    animation: slideUp 0.3s ease;
+    max-height: 90dvh; overflow-y: auto;
+  }
+  @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .modal-handle {
+    width: 36px; height: 4px; background: var(--cream-dark);
+    border-radius: 2px; margin: 0 auto 20px;
+  }
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px; color: var(--green-deep); margin-bottom: 6px;
+  }
+  .modal-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 20px; }
+  .modal-emoji { font-size: 48px; margin-bottom: 12px; display: block; }
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+  .info-cell {
+    background: white; border-radius: 12px; padding: 12px;
+  }
+  .info-cell-label { font-size: 11px; color: var(--text-light); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .info-cell-val { font-size: 15px; font-weight: 600; color: var(--text-dark); }
+  .modal-desc { font-size: 14px; line-height: 1.7; color: var(--text-mid); margin-bottom: 20px; }
+  .tips-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .tips-list li {
+    background: white; border-radius: 10px; padding: 10px 14px;
+    font-size: 13px; color: var(--text-mid); display: flex; gap: 10px; align-items: flex-start;
+  }
+  .tips-list li::before { content: ''; flex-shrink: 0; }
+  .close-modal {
+    position: absolute; top: 20px; right: 20px;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--cream-dark); border: none; cursor: pointer;
+    font-size: 16px; color: var(--text-mid);
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* FAUNE & FLORE */
+  .species-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .species-card {
+    background: white; border-radius: var(--radius);
+    overflow: hidden; cursor: pointer;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    transition: transform 0.15s;
+  }
+  .species-card:active { transform: scale(0.97); }
+  .species-img {
+    height: 100px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 48px;
+  }
+  .species-body { padding: 10px 12px; }
+  .species-name { font-size: 13px; font-weight: 600; }
+  .species-latin { font-size: 11px; color: var(--text-light); font-style: italic; }
+  .species-tag {
+    display: inline-block; font-size: 10px; font-weight: 600;
+    padding: 2px 8px; border-radius: 6px; margin-top: 4px;
+    text-transform: uppercase; letter-spacing: 0.3px;
+  }
+  .tag-endemic { background: #fde8e4; color: var(--coral); }
+  .tag-rare { background: #fff3cd; color: #856404; }
+  .tag-common { background: #d8f3dc; color: var(--green-mid); }
+
+  /* URGENCES */
+  .urgence-card {
+    background: white; border-radius: var(--radius);
+    padding: 16px; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 14px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  }
+  .urgence-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+  }
+  .urg-red { background: #fde8e4; }
+  .urg-blue { background: #e0f3f8; }
+  .urg-orange { background: #fff3cd; }
+  .urg-green { background: #d8f3dc; }
+  .urgence-name { font-size: 15px; font-weight: 600; }
+  .urgence-num { font-size: 20px; font-weight: 700; color: var(--green-mid); letter-spacing: 1px; }
+  .call-btn {
+    margin-left: auto; width: 40px; height: 40px; border-radius: 50%;
+    background: var(--green-light); border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0;
+  }
+
+  /* PAGE HEADERS */
+  .page-header {
+    padding: 20px 16px 0;
+    margin-bottom: 20px;
+  }
+  .page-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px; color: var(--green-deep);
+  }
+  .page-header p { font-size: 14px; color: var(--text-light); margin-top: 4px; }
+
+  /* CHECKLIST */
+  .check-section { margin-bottom: 20px; }
+  .check-title { font-size: 14px; font-weight: 700; color: var(--text-mid); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+  .check-item {
+    display: flex; align-items: center; gap: 12px;
+    background: white; border-radius: 10px; padding: 12px 14px;
+    margin-bottom: 8px; cursor: pointer;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+    transition: opacity 0.2s;
+  }
+  .check-item.done { opacity: 0.5; }
+  .check-box {
+    width: 22px; height: 22px; border-radius: 6px;
+    border: 2px solid var(--green-mid); flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .check-item.done .check-box { background: var(--green-mid); border-color: var(--green-mid); }
+  .check-box::after { content: '✓'; color: white; font-size: 13px; opacity: 0; transition: opacity 0.15s; }
+  .check-item.done .check-box::after { opacity: 1; }
+  .check-label { font-size: 14px; }
+  .check-item.done .check-label { text-decoration: line-through; color: var(--text-light); }
+
+  /* INSTALL BANNER */
+  .install-banner {
+    display: none; position: fixed; bottom: calc(var(--nav-h) + 12px); left: 12px; right: 12px; z-index: 150;
+    background: var(--green-deep); color: white; border-radius: 16px;
+    padding: 14px 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    flex-direction: column; gap: 10px;
+  }
+  .install-banner.show { display: flex; }
+  .install-banner p { font-size: 13px; line-height: 1.4; }
+  .install-banner p strong { color: var(--green-light); }
+  .install-actions { display: flex; gap: 8px; }
+  .btn-install { background: var(--green-light); color: white; padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 13px; font-weight: 600; }
+  .btn-dismiss { background: transparent; color: rgba(255,255,255,0.5); padding: 8px; border: none; cursor: pointer; font-size: 13px; }
+
+  /* ANIMAIONS */
+  @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+  .pulse { animation: pulse 2s infinite; }
+
+  /* Scroll reveal */
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.5s, transform 0.5s; }
+  .revealed { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<div class="offline-banner">📡 Mode hors ligne — contenu mis en cache disponible</div>
+
+<!-- NAV BOTTOM -->
+<nav class="bottom-nav">
+  <button class="nav-item active" onclick="showPage('accueil')" id="nav-accueil">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span class="nav-label">Accueil</span>
+  </button>
+  <button class="nav-item" onclick="showPage('carte')" id="nav-carte">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+    <span class="nav-label">Carte</span>
+  </button>
+  <button class="nav-item" onclick="showPage('levadas')" id="nav-levadas">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/><circle cx="9" cy="7" r="4"/></svg>
+    <span class="nav-label">Levadas</span>
+  </button>
+  <button class="nav-item" onclick="showPage('nature')" id="nav-nature">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22V12"/><path d="M5 3a7 7 0 0114 0c0 4.418-7 9-7 9S5 7.418 5 3z"/></svg>
+    <span class="nav-label">Nature</span>
+  </button>
+  <button class="nav-item" onclick="showPage('carnet')" id="nav-carnet">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+    <span class="nav-label">Carnet</span>
+  </button>
+</nav>
+
+<!-- ===================== PAGE ACCUEIL ===================== -->
+<div class="page active" id="page-accueil">
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="weather-pill" id="weather-pill">
+      <div class="weather-temp" id="hp-temp">22°</div>
+      <div class="weather-desc" id="hp-desc">Ensoleillé</div>
+    </div>
+    <div class="hero-tag">🌿 Île de Madère</div>
+    <h1>L'île <em>sauvage</em><br>de l'Atlantique</h1>
+    <p class="hero-sub">Guide nature · Hors ligne · GPS</p>
+    <svg class="hero-wave" viewBox="0 0 375 40" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0 40 C100 0 275 50 375 20 L375 40 Z" fill="#f4f0e6"/>
+    </svg>
+  </div>
+
+  <!-- Faits rapides -->
+  <div class="section" style="margin-top: 20px;">
+    <div style="display:flex; gap:10px; overflow-x:auto; scrollbar-width:none; margin:0 -16px; padding:0 16px 4px;">
+      <div style="flex-shrink:0;background:white;border-radius:14px;padding:14px 16px;box-shadow:0 2px 10px rgba(0,0,0,0.07);text-align:center;min-width:100px;">
+        <div style="font-size:24px;margin-bottom:4px;">🗻</div>
+        <div style="font-size:16px;font-weight:700;color:var(--green-deep)">1862m</div>
+        <div style="font-size:11px;color:var(--text-light)">Pico Ruivo</div>
+      </div>
+      <div style="flex-shrink:0;background:white;border-radius:14px;padding:14px 16px;box-shadow:0 2px 10px rgba(0,0,0,0.07);text-align:center;min-width:100px;">
+        <div style="font-size:24px;margin-bottom:4px;">🌊</div>
+        <div style="font-size:16px;font-weight:700;color:var(--green-deep)">741km²</div>
+        <div style="font-size:11px;color:var(--text-light)">Superficie</div>
+      </div>
+      <div style="flex-shrink:0;background:white;border-radius:14px;padding:14px 16px;box-shadow:0 2px 10px rgba(0,0,0,0.07);text-align:center;min-width:100px;">
+        <div style="font-size:24px;margin-bottom:4px;">🌿</div>
+        <div style="font-size:16px;font-weight:700;color:var(--green-deep)">2500km</div>
+        <div style="font-size:11px;color:var(--text-light)">Levadas</div>
+      </div>
+      <div style="flex-shrink:0;background:white;border-radius:14px;padding:14px 16px;box-shadow:0 2px 10px rgba(0,0,0,0.07);text-align:center;min-width:100px;">
+        <div style="font-size:24px;margin-bottom:4px;">🦜</div>
+        <div style="font-size:16px;font-weight:700;color:var(--green-deep)">280+</div>
+        <div style="font-size:11px;color:var(--text-light)">Espèces oiseaux</div>
+      </div>
+      <div style="flex-shrink:0;background:white;border-radius:14px;padding:14px 16px;box-shadow:0 2px 10px rgba(0,0,0,0.07);text-align:center;min-width:100px;">
+        <div style="font-size:24px;margin-bottom:4px;">☀️</div>
+        <div style="font-size:16px;font-weight:700;color:var(--green-deep)">20°C</div>
+        <div style="font-size:11px;color:var(--text-light)">Moy. annuelle</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sites incontournables -->
+  <div class="section" style="margin-top:24px;">
+    <div class="section-header">
+      <h2 class="section-title">Incontournables</h2>
+      <a href="#" class="section-link" onclick="showPage('carte');return false;">Voir carte →</a>
+    </div>
+    <div class="cards-scroll">
+      <div class="card" onclick="openModal('pico-ruivo')">
+        <div class="card-img" style="background:linear-gradient(135deg,#2d6a4f,#1a3a2a);">
+          🗻 <div class="card-badge">★ Top</div>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Pico Ruivo</div>
+          <div class="card-meta"><span>🥾 Difficile</span><span>📍 Centre</span></div>
+        </div>
+      </div>
+      <div class="card" onclick="openModal('laurissilva')">
+        <div class="card-img" style="background:linear-gradient(135deg,#40916c,#2d6a4f);">
+          🌿 <div class="card-badge">UNESCO</div>
+        </div>
+        <div class="card-body">
+          <div class="card-name">Forêt Laurissilva</div>
+          <div class="card-meta"><span>🌳 Nature</span><span>📍 Nord</span></div>
+        </div>
+      </div>
+      <div class="card" onclick="openModal('cabo-girao')">
+        <div class="card-img" style="background:linear-gradient(135deg,#2196a6,#1a3a2a);">
+          🏔️
+        </div>
+        <div class="card-body">
+          <div class="card-name">Cabo Girão</div>
+          <div class="card-meta"><span>👁️ Panorama</span><span>📍 Sud</span></div>
+        </div>
+      </div>
+      <div class="card" onclick="openModal('queimadas')">
+        <div class="card-img" style="background:linear-gradient(135deg,#52b788,#40916c);">
+          🏡
+        </div>
+        <div class="card-body">
+          <div class="card-name">Queimadas</div>
+          <div class="card-meta"><span>🌫️ Nuages</span><span>📍 Nord</span></div>
+        </div>
+      </div>
+      <div class="card" onclick="openModal('porto-moniz')">
+        <div class="card-img" style="background:linear-gradient(135deg,#1e6091,#2196a6);">
+          🌊
+        </div>
+        <div class="card-body">
+          <div class="card-name">Porto Moniz</div>
+          <div class="card-meta"><span>🏊 Baignade</span><span>📍 Nord-O.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Météo rapide -->
+  <div class="section" style="margin-top:24px;">
+    <div class="section-header">
+      <h2 class="section-title">Météo 7 jours</h2>
+      <a href="#" class="section-link" onclick="showPage('meteo');return false;">Détails →</a>
+    </div>
+    <div class="forecast-scroll" id="forecast-mini"></div>
+  </div>
+
+  <!-- Checklist rapide -->
+  <div class="section" style="margin-top:24px; padding-bottom:8px;">
+    <div class="section-header">
+      <h2 class="section-title">Ma préparation</h2>
+      <a href="#" class="section-link" onclick="showPage('carnet');return false;">Tout voir →</a>
+    </div>
+    <div id="quick-checks"></div>
+  </div>
+</div>
+
+<!-- ===================== PAGE CARTE ===================== -->
+<div class="page" id="page-carte">
+  <div class="page-header">
+    <h2>Carte interactive</h2>
+    <p>Points d'intérêt nature & randonnée</p>
+  </div>
+  <div class="section" style="padding-top:0;">
+    <div class="poi-filters" id="poi-filters">
+      <button class="filter-chip active" onclick="filterPOI('all', this)">Tout</button>
+      <button class="filter-chip" onclick="filterPOI('levada', this)">Levadas</button>
+      <button class="filter-chip" onclick="filterPOI('sommet', this)">Sommets</button>
+      <button class="filter-chip" onclick="filterPOI('plage', this)">Plages</button>
+      <button class="filter-chip" onclick="filterPOI('cascade', this)">Cascades</button>
+      <button class="filter-chip" onclick="filterPOI('foret', this)">Forêts</button>
+    </div>
+    <div class="map-container">
+      <svg class="map-svg" viewBox="0 0 360 240" id="madeira-map">
+        <!-- Fond mer -->
+        <rect width="360" height="240" fill="#1a3a4a"/>
+        <!-- Ombre île -->
+        <ellipse cx="165" cy="125" rx="145" ry="72" fill="rgba(0,0,0,0.3)" transform="translate(8,8)"/>
+        <!-- Corps principal Madère -->
+        <path d="M30,140 C40,120 55,105 80,95 C100,88 115,82 140,78 C165,74 185,70 210,72 C235,74 252,80 268,90 C282,100 292,112 296,125 C298,135 292,148 278,155 C260,165 240,168 215,170 C190,172 165,174 140,172 C112,170 88,165 68,158 C50,152 35,148 30,140 Z" fill="#2d6a4f"/>
+        <!-- Relief -->
+        <path d="M120,90 C130,82 145,78 160,76 C175,74 190,76 205,80 C218,84 228,92 230,100 C232,108 224,114 210,118 C196,122 178,124 162,124 C146,124 132,120 122,112 C114,106 112,96 120,90 Z" fill="#40916c"/>
+        <path d="M145,80 C155,75 165,72 175,73 C185,74 193,80 196,88 C198,95 192,102 182,106 C172,110 160,110 150,106 C140,102 136,94 138,86 C139,81 142,82 145,80 Z" fill="#52b788" opacity="0.7"/>
+        <!-- Routes principales -->
+        <path d="M50,140 C80,135 120,130 160,128 C200,126 240,128 280,135" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" fill="none" stroke-dasharray="4,2"/>
+        <!-- POI Pins -->
+        <g id="map-pins">
+          <!-- Funchal -->
+          <circle cx="200" cy="155" r="6" fill="#d4a843" id="pin-funchal" class="map-pin" data-type="ville"/>
+          <text x="200" y="170" text-anchor="middle" fill="white" font-size="8" opacity="0.9">Funchal</text>
+          <!-- Pico Ruivo -->
+          <circle cx="160" cy="88" r="6" fill="#e07a5f" id="pin-pico" class="map-pin" data-type="sommet"/>
+          <text x="160" y="82" text-anchor="middle" fill="white" font-size="7" opacity="0.9">Pico Ruivo</text>
+          <!-- Levada do Norte -->
+          <circle cx="130" cy="118" r="5" fill="#52b788" id="pin-lev1" class="map-pin" data-type="levada"/>
+          <!-- Queimadas -->
+          <circle cx="145" cy="100" r="5" fill="#52b788" id="pin-queimadas" class="map-pin" data-type="foret"/>
+          <!-- Porto Moniz -->
+          <circle cx="48" cy="110" r="5" fill="#2196a6" id="pin-porto" class="map-pin" data-type="plage"/>
+          <text x="48" y="104" text-anchor="middle" fill="white" font-size="7" opacity="0.9">P.Moniz</text>
+          <!-- Cabo Girão -->
+          <circle cx="155" cy="160" r="5" fill="#e07a5f" id="pin-cabo" class="map-pin" data-type="sommet"/>
+          <!-- Cascata -->
+          <circle cx="90" cy="108" r="5" fill="#60b4ff" id="pin-casca" class="map-pin" data-type="cascade"/>
+          <!-- Santana -->
+          <circle cx="195" cy="95" r="5" fill="#52b788" id="pin-santana" class="map-pin" data-type="levada"/>
+          <text x="195" y="89" text-anchor="middle" fill="white" font-size="7" opacity="0.9">Santana</text>
+        </g>
+        <!-- Légende -->
+        <rect x="10" y="200" width="340" height="32" rx="6" fill="rgba(0,0,0,0.35)"/>
+        <circle cx="25" cy="216" r="4" fill="#e07a5f"/>
+        <text x="33" y="220" fill="white" font-size="8">Sommet</text>
+        <circle cx="80" cy="216" r="4" fill="#52b788"/>
+        <text x="88" y="220" fill="white" font-size="8">Levada/Forêt</text>
+        <circle cx="148" cy="216" r="4" fill="#2196a6"/>
+        <text x="156" y="220" fill="white" font-size="8">Plage</text>
+        <circle cx="195" cy="216" r="4" fill="#60b4ff"/>
+        <text x="203" y="220" fill="white" font-size="8">Cascade</text>
+        <circle cx="250" cy="216" r="4" fill="#d4a843"/>
+        <text x="258" y="220" fill="white" font-size="8">Ville</text>
+      </svg>
+      <button class="gps-btn" onclick="locateMe()" title="Ma position">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>
+      </button>
+    </div>
+    <p style="font-size:12px;color:var(--text-light);text-align:center;margin-top:8px;">Appuyez sur un point pour plus d'infos</p>
+  </div>
+
+  <!-- Liste POI -->
+  <div class="section" style="margin-top:24px;">
+    <h3 style="font-size:16px;font-weight:700;color:var(--text-dark);margin-bottom:14px;">Points d'intérêt</h3>
+    <div id="poi-list"></div>
+  </div>
+</div>
+
+<!-- ===================== PAGE LEVADAS ===================== -->
+<div class="page" id="page-levadas">
+  <div class="page-header">
+    <h2>Levadas & Sentiers</h2>
+    <p>2500 km de canaux d'irrigation à explorer</p>
+  </div>
+  <div class="section" style="padding-top:0;">
+    <div class="trail-list" id="trail-list"></div>
+  </div>
+</div>
+
+<!-- ===================== PAGE NATURE ===================== -->
+<div class="page" id="page-nature">
+  <div class="page-header">
+    <h2>Faune & Flore</h2>
+    <p>Espèces endémiques de Madère</p>
+  </div>
+
+  <!-- Sous-tabs -->
+  <div style="display:flex;gap:0;margin:0 16px 20px;border-radius:12px;overflow:hidden;border:1.5px solid var(--cream-dark);">
+    <button onclick="switchNatureTab('flore',this)" id="tab-flore" style="flex:1;padding:10px;border:none;background:var(--green-mid);color:white;font-size:13px;font-weight:600;cursor:pointer;">🌿 Flore</button>
+    <button onclick="switchNatureTab('faune',this)" id="tab-faune" style="flex:1;padding:10px;border:none;background:white;color:var(--text-mid);font-size:13px;font-weight:600;cursor:pointer;">🦋 Faune</button>
+    <button onclick="switchNatureTab('oiseaux',this)" id="tab-oiseaux" style="flex:1;padding:10px;border:none;background:white;color:var(--text-mid);font-size:13px;font-weight:600;cursor:pointer;">🐦 Oiseaux</button>
+  </div>
+
+  <div class="section" style="padding-top:0;">
+    <div class="species-grid" id="species-grid"></div>
+  </div>
+
+  <!-- Conseils nature -->
+  <div class="section" style="margin-top:24px;">
+    <div style="background:var(--green-dark);border-radius:var(--radius);padding:18px;color:white;">
+      <div style="font-size:18px;margin-bottom:8px;">🌿 Charte de la nature</div>
+      <div style="font-size:13px;line-height:1.7;opacity:0.85;">
+        • Ne cueillez pas les plantes endémiques<br>
+        • Restez sur les sentiers balisés<br>
+        • Emportez vos déchets<br>
+        • Ne nourrissez pas la faune sauvage<br>
+        • Respectez le silence en forêt laurissilva
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE CARNET ===================== -->
+<div class="page" id="page-carnet">
+  <!-- Sous-tabs -->
+  <div class="page-header" style="margin-bottom:12px;">
+    <h2>Mon Carnet</h2>
+  </div>
+  <div style="display:flex;gap:0;margin:0 16px 20px;border-radius:12px;overflow:hidden;border:1.5px solid var(--cream-dark);">
+    <button onclick="switchCarnetTab('notes',this)" id="ctab-notes" style="flex:1;padding:10px;border:none;background:var(--green-mid);color:white;font-size:13px;font-weight:600;cursor:pointer;">📝 Notes</button>
+    <button onclick="switchCarnetTab('checklist',this)" id="ctab-checklist" style="flex:1;padding:10px;border:none;background:white;color:var(--text-mid);font-size:13px;font-weight:600;cursor:pointer;">✅ Checklist</button>
+    <button onclick="switchCarnetTab('urgences',this)" id="ctab-urgences" style="flex:1;padding:10px;border:none;background:white;color:var(--text-mid);font-size:13px;font-weight:600;cursor:pointer;">🆘 Urgences</button>
+  </div>
+
+  <div id="carnet-notes" class="section" style="padding-top:0;">
+    <div class="memo-editor">
+      <textarea class="memo-textarea" id="note-input" placeholder="Écrivez vos observations, souvenirs…"></textarea>
+      <div class="memo-actions">
+        <button class="btn btn-primary" onclick="addNote()">Ajouter ✓</button>
+      </div>
+    </div>
+    <div id="notes-list"></div>
+  </div>
+
+  <div id="carnet-checklist" class="section" style="padding-top:0;display:none;">
+    <div id="checklist-full"></div>
+  </div>
+
+  <div id="carnet-urgences" class="section" style="padding-top:0;display:none;">
+    <div id="urgences-list"></div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModalIfOverlay(event)">
+  <div class="modal" id="modal-content" style="position:relative;">
+    <div class="modal-handle"></div>
+    <button class="close-modal" onclick="closeModal()">✕</button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<!-- INSTALL BANNER -->
+<div class="install-banner" id="install-banner">
+  <p><strong>📱 Installer Madeira Wild</strong><br>Accès hors ligne complet, GPS, météo & guide nature.</p>
+  <div class="install-actions">
+    <button class="btn-install" id="btn-install-app">Installer l'app</button>
+    <button class="btn-dismiss" onclick="dismissInstall()">Plus tard</button>
+  </div>
+</div>
+
+<script>
+// ================ DATA ================
+const TRAILS = [
+  { id:'lev-25fontes', name:'Levada das 25 Fontes', dist:'8.4 km', duration:'3h', diff:'easy', elev:'300m', icon:'💧', region:'Rabacal', desc:'La levada la plus célèbre — 25 sources d\'eau cristalline au bout du chemin. Sous-bois de laurissilva enchanteur.', tips:['Partez tôt (8h) pour éviter la foule','Emportez une lampe torche (tunnel)','Chaussures imperméables conseillées'] },
+  { id:'lev-caldeirão-verde', name:'Levada do Caldeirão Verde', dist:'13 km', duration:'5h', diff:'med', elev:'450m', icon:'🌿', region:'Queimadas', desc:'Sentier mythique à travers la forêt de laurissilva UNESCO. Aboutit à une cascade de 100m dans un caldeira.', tips:['4 tunnels — lampe frontale obligatoire','Accès depuis Queimadas','Conditions meteorologiques changeantes'] },
+  { id:'pico-ruivo', name:'Pico Ruivo (3 picos)', dist:'6.7 km', duration:'4h', diff:'hard', elev:'580m', icon:'🗻', region:'Centre', desc:'Le toit de Madère à 1862m. Vue à 360° au-dessus des nuages. Traversée des trois plus hauts sommets de l\'île.', tips:['Départ depuis Achada do Teixeira','Heure dorée au lever du soleil','Température 10°C plus fraiche qu\'en bas'] },
+  { id:'ponta-sao-lourenco', name:'Ponta de São Lourenço', dist:'8 km', duration:'3.5h', diff:'med', elev:'200m', icon:'🏜️', region:'Est', desc:'Paysage lunaire contrastant avec le reste de l\'île. Falaises dramatiques sur l\'océan Atlantique. Faune unique.', tips:['Sentier exposé au vent fort','Apportez eau et crème solaire','Zone de nidification des puffins'] },
+  { id:'lev-ribeiro-frio', name:'Levada do Furado', dist:'11 km', duration:'4h', diff:'easy', elev:'100m', icon:'🌊', region:'Ribeiro Frio', desc:'Facile et très accessible depuis Ribeiro Frio. Traversée de forêts de laurissilva et d\'eucalyptus.', tips:['Idéal pour les familles','Mirador avec vue sur la vallée','Présence fréquente de pies bleues de Madère'] },
+  { id:'vereda-encumeada', name:'Vereda da Encumeada', dist:'14 km', duration:'6h', diff:'hard', elev:'800m', icon:'⛰️', region:'Centre', desc:'Traversée alpestre entre Encumeada et São Vicente. Vues panoramiques sur les deux versants de l\'île.', tips:['Météo imprévisible — vérifiez avant','Équipement complet requis','Guide recommandé pour les débutants'] },
+];
+
+const POIS = [
+  { name:'Pico Ruivo', type:'sommet', emoji:'🗻', desc:'Plus haut sommet, 1862m' },
+  { name:'Levada 25 Fontes', type:'levada', emoji:'💧', desc:'Levada & sources cristallines' },
+  { name:'Porto Moniz', type:'plage', emoji:'🌊', desc:'Piscines naturelles volcaniques' },
+  { name:'Queimadas', type:'foret', emoji:'🌿', desc:'Forêt laurissilva UNESCO' },
+  { name:'Cascata do Risco', type:'cascade', emoji:'💦', desc:'Cascade de 100m' },
+  { name:'Cabo Girão', type:'sommet', emoji:'🏔️', desc:'2ème plus haute falaise d\'Europe, 580m' },
+  { name:'Santana', type:'levada', emoji:'🏡', desc:'Village & casas de colmo' },
+  { name:'Ponta São Lourenço', type:'plage', emoji:'🦅', desc:'Paysage lunaire & faune marine' },
+];
+
+const SPECIES = {
+  flore: [
+    { name:'Til', latin:'Ocotea foetens', emoji:'🌳', tag:'endemic', color:'#d8f3dc' },
+    { name:'Til de Madère', latin:'Persea indica', emoji:'🌿', tag:'endemic', color:'#d8f3dc' },
+    { name:'Orchidée de Madère', latin:'Dactylorhiza foliosa', emoji:'🌸', tag:'endemic', color:'#fde8e4' },
+    { name:'Euphorbe arborescent', latin:'Euphorbia piscatoria', emoji:'🌵', tag:'endemic', color:'#d8f3dc' },
+    { name:'Strelitzia', latin:'Strelitzia reginae', emoji:'🌺', tag:'common', color:'#fff3cd' },
+    { name:'Jacaranda', latin:'Jacaranda mimosifolia', emoji:'💜', tag:'common', color:'#fff3cd' },
+  ],
+  faune: [
+    { name:'Monk seal de Madère', latin:'Monachus monachus', emoji:'🦭', tag:'rare', color:'#fde8e4' },
+    { name:'Lézard de Madère', latin:'Teira dugesii', emoji:'🦎', tag:'endemic', color:'#d8f3dc' },
+    { name:'Puffin des Baléares', latin:'Puffinus mauretanicus', emoji:'🐟', tag:'rare', color:'#fde8e4' },
+    { name:'Bécasse des bois', latin:'Scolopax rusticola', emoji:'🦆', tag:'common', color:'#fff3cd' },
+    { name:'Dauphin commun', latin:'Delphinus delphis', emoji:'🐬', tag:'common', color:'#fff3cd' },
+    { name:'Baleine à bosse', latin:'Megaptera novaeangliae', emoji:'🐋', tag:'rare', color:'#fde8e4' },
+  ],
+  oiseaux: [
+    { name:'Pigeon trocaz', latin:'Columba trocaz', emoji:'🕊️', tag:'endemic', color:'#d8f3dc' },
+    { name:'Pie bleue de Madère', latin:'Cyanopica cooki', emoji:'🔵', tag:'endemic', color:'#d8f3dc' },
+    { name:'Faucon crécerelle', latin:'Falco tinnunculus', emoji:'🦅', tag:'common', color:'#fff3cd' },
+    { name:'Pétrel de Bulwer', latin:'Bulweria bulwerii', emoji:'🌊', tag:'rare', color:'#fde8e4' },
+    { name:'Canari de Madère', latin:'Serinus canaria', emoji:'🐤', tag:'endemic', color:'#d8f3dc' },
+    { name:'Merle noir', latin:'Turdus merula cabrerae', emoji:'⚫', tag:'endemic', color:'#d8f3dc' },
+  ],
+};
+
+const CHECKLIST = {
+  'Équipement randonnée': [
+    'Chaussures de randonnée imperméables',
+    'Bâtons de marche',
+    'Poncho / veste imperméable',
+    'Sac à dos 20-30L',
+    'Lampe frontale + piles',
+  ],
+  'Sécurité': [
+    'Trousse de premiers secours',
+    'Sifflet d\'urgence',
+    'Couverture de survie',
+    'Téléphone chargé (+ batterie externe)',
+    'Carte hors-ligne téléchargée',
+  ],
+  'Confort': [
+    'Eau (min. 2L par randonnée)',
+    'Snacks énergétiques',
+    'Crème solaire SPF 50+',
+    'Lunettes de soleil',
+    'Chapeau ou casquette',
+  ],
+  'Nature': [
+    'Jumelles pour les oiseaux',
+    'Carnet d\'observations',
+    'Guide des plantes locales',
+    'Sacs poubelle (laisser propre)',
+  ],
+};
+
+const URGENCES = [
+  { name:'SAMU / Urgences', num:'112', emoji:'🚑', color:'urg-red' },
+  { name:'Police (GNR)', num:'291 202 400', emoji:'👮', color:'urg-blue' },
+  { name:'Pompiers Funchal', num:'291 220 580', emoji:'🚒', color:'urg-orange' },
+  { name:'Gardes forestiers', num:'291 750 075', emoji:'🌿', color:'urg-green' },
+  { name:'Hôpital Dr. Nélio Mendonça', num:'291 705 600', emoji:'🏥', color:'urg-blue' },
+  { name:'SOS Mer', num:'291 213 112', emoji:'⚓', color:'urg-blue' },
+];
+
+const MODAL_DATA = {
+  'pico-ruivo': {
+    emoji:'🗻', title:'Pico Ruivo', subtitle:'1862m · Plus haut sommet de Madère',
+    infos:[{label:'Altitude',val:'1862 m'},{label:'Durée',val:'4h A/R'},{label:'Distance',val:'6.7 km'},{label:'Départ',val:'Achada Teixeira'}],
+    desc:'Au-dessus des nuages, le Pico Ruivo offre une vue à 360° sur toute l\'île. Le lever du soleil depuis le refuge est une expérience inoubliable. La végétation y est unique : bruyères arborescentes géantes, fougères arborescentes et orchidées endémiques.',
+    tips:['Partez à 5h30 pour le lever du soleil','Températures 10°C plus fraîches — habillez-vous en couches','Route d\'accès souvent dans les nuages','Le refuge de Pico Ruivo propose hébergement et repas','Balisage PR1 clairement visible'],
+  },
+  'laurissilva': {
+    emoji:'🌿', title:'Forêt Laurissilva', subtitle:'Patrimoine mondial UNESCO',
+    infos:[{label:'Superficie',val:'15 000 ha'},{label:'Âge',val:'>65 Ma'},{label:'Zone',val:'Nord & Centre'},{label:'Classement',val:'UNESCO 1999'}],
+    desc:'La forêt de laurissilva de Madère est l\'un des vestiges les mieux préservés de ce type de forêt subtropicale qui couvrait jadis le bassin méditerranéen. Classée au patrimoine mondial en 1999, elle abrite des dizaines d\'espèces endémiques.',
+    tips:['Queimadas est la meilleure porte d\'entrée','Humidité permanente — veste imperméable indispensable','Silence absolu pour observer les oiseaux','Les lichens et mousses sont indicateurs de qualité d\'air','Interdiction absolue de cueillir les plantes'],
+  },
+  'cabo-girao': {
+    emoji:'🏔️', title:'Cabo Girão', subtitle:'2ème plus haute falaise d\'Europe — 580m',
+    infos:[{label:'Hauteur',val:'580 m'},{label:'Skywalk',val:'Gratuit'},{label:'Accès',val:'Câmara de Lobos'},{label:'Vue',val:'Panoramique 180°'}],
+    desc:'Cabo Girão est l\'une des falaises les plus hautes d\'Europe avec ses 580 mètres de chute verticale. Un skywalk en verre permet de regarder directement en bas. En contrebas, des potagers impossibles sont cultivés par des agriculteurs qui y accèdent par téléférique.',
+    tips:['Visite idéale tôt le matin (moins de monde)','Le téléférique descend vers les fajãs','Petit café/restaurant sur place','Coucher de soleil spectaculaire','Accès libre au belvédère'],
+  },
+  'queimadas': {
+    emoji:'🏡', title:'Queimadas', subtitle:'Cœur de la laurissilva · 870m d\'altitude',
+    infos:[{label:'Altitude',val:'870 m'},{label:'Accès',val:'Santana'},{label:'Type',val:'Forêt & Levada'},{label:'Difficulté',val:'Facile'}],
+    desc:'La maison forestière de Queimadas est le point de départ des plus belles randonnées dans la laurissilva. Entouré de jardins suspendus dans les nuages, c\'est un endroit magique où l\'humidité transforme les arbres en sculptures couvertes de mousse.',
+    tips:['Point de départ levada Caldeirão Verde','Parking disponible (souvent complet en été)','Restaurant fermé — apportez vos provisions','Zone souvent dans les nuages après 14h','Idéal pour observer le pigeon trocaz'],
+  },
+  'porto-moniz': {
+    emoji:'🌊', title:'Porto Moniz', subtitle:'Piscines naturelles volcaniques',
+    infos:[{label:'Zone',val:'Nord-Ouest'},{label:'Baignade',val:'Payant ~3€'},{label:'Saison',val:'Été'},{label:'Eau',val:'18-22°C'}],
+    desc:'Porto Moniz abrite les piscines naturelles les plus célèbres de Madère, creusées dans la roche volcanique par des millions d\'années d\'érosion. L\'eau de l\'Atlantique y est canalisée pour offrir une baignade unique face à l\'océan.',
+    tips:['Arrivée tôt recommandée en été','Chaussures aquatiques conseillées','Deux complexes distincts : Piscinas Naturais et Complexo Balnear','Village avec excellents restaurants de poisson','Lever et coucher de soleil remarquables'],
+  },
+};
+
+// ================ WEATHER SIMULATION ================
+const FORECAST = [
+  { day:'Auj.', emoji:'☀️', temp:'22°', today:true },
+  { day:'Lun.', emoji:'⛅', temp:'20°' },
+  { day:'Mar.', emoji:'🌧️', temp:'18°' },
+  { day:'Mer.', emoji:'⛅', temp:'19°' },
+  { day:'Jeu.', emoji:'☀️', temp:'23°' },
+  { day:'Ven.', emoji:'☀️', temp:'24°' },
+  { day:'Sam.', emoji:'🌤️', temp:'22°' },
+];
+
+// ================ APP STATE ================
+let currentPage = 'accueil';
+let currentNatureTab = 'flore';
+let currentCarnetTab = 'notes';
+let notes = JSON.parse(localStorage.getItem('mw-notes') || '[]');
+let checks = JSON.parse(localStorage.getItem('mw-checks') || '{}');
+let deferredPrompt = null;
+
+// ================ INIT ================
+document.addEventListener('DOMContentLoaded', () => {
+  renderForecast();
+  renderTrails();
+  renderPOIList('all');
+  renderSpecies('flore');
+  renderChecklist('full');
+  renderNotes();
+  renderUrgences();
+  renderQuickChecks();
+  setupOffline();
+});
+
+// ================ PAGES ================
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.getElementById('nav-' + id).classList.add('active');
+  currentPage = id;
+  window.scrollTo(0, 0);
+}
+
+// ================ FORECAST ================
+function renderForecast() {
+  const mini = document.getElementById('forecast-mini');
+  mini.innerHTML = FORECAST.map(d => `
+    <div class="forecast-day ${d.today ? 'today' : ''}">
+      <div class="forecast-dow">${d.day}</div>
+      <div class="forecast-emoji">${d.emoji}</div>
+      <div class="forecast-temp">${d.temp}</div>
+    </div>
+  `).join('');
+}
+
+// ================ TRAILS ================
+function renderTrails() {
+  const list = document.getElementById('trail-list');
+  list.innerHTML = TRAILS.map(t => `
+    <div class="trail-item" onclick="openTrailModal('${t.id}')">
+      <div class="trail-icon" style="background:${t.diff==='easy'?'var(--green-mid)':t.diff==='med'?'#e9c46a':'var(--coral)'}">
+        ${t.icon}
+      </div>
+      <div class="trail-info">
+        <div class="trail-name">${t.name}</div>
+        <div class="trail-details">
+          <span>📏 ${t.dist}</span>
+          <span>⏱️ ${t.duration}</span>
+          <span>📍 ${t.region}</span>
+        </div>
+      </div>
+      <span class="difficulty diff-${t.diff}">${t.diff==='easy'?'Facile':t.diff==='med'?'Moyen':'Difficile'}</span>
+    </div>
+  `).join('');
+}
+
+// ================ POI ================
+function renderPOIList(filter) {
+  const list = document.getElementById('poi-list');
+  const filtered = filter === 'all' ? POIS : POIS.filter(p => p.type === filter);
+  list.innerHTML = filtered.map(p => `
+    <div style="background:white;border-radius:14px;padding:12px 16px;display:flex;align-items:center;gap:12px;margin-bottom:10px;box-shadow:0 2px 10px rgba(0,0,0,0.06);">
+      <div style="font-size:28px;width:40px;text-align:center;">${p.emoji}</div>
+      <div>
+        <div style="font-size:14px;font-weight:600;">${p.name}</div>
+        <div style="font-size:12px;color:var(--text-light);">${p.desc}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterPOI(type, el) {
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderPOIList(type);
+  // Show/hide pins on SVG map
+  document.querySelectorAll('.map-pin').forEach(pin => {
+    const pt = pin.getAttribute('data-type');
+    pin.style.opacity = (type === 'all' || pt === type) ? '1' : '0.15';
+  });
+}
+
+// ================ SPECIES ================
+function switchNatureTab(tab, el) {
+  document.querySelectorAll('#page-nature button').forEach(b => {
+    b.style.background = 'white'; b.style.color = 'var(--text-mid)';
+  });
+  el.style.background = 'var(--green-mid)'; el.style.color = 'white';
+  renderSpecies(tab);
+}
+
+function renderSpecies(tab) {
+  currentNatureTab = tab;
+  const grid = document.getElementById('species-grid');
+  grid.innerHTML = SPECIES[tab].map(s => `
+    <div class="species-card" onclick="openSpeciesModal('${s.name}')">
+      <div class="species-img" style="background:${s.color}">${s.emoji}</div>
+      <div class="species-body">
+        <div class="species-name">${s.name}</div>
+        <div class="species-latin">${s.latin}</div>
+        <span class="species-tag tag-${s.tag}">${s.tag==='endemic'?'Endémique':s.tag==='rare'?'Rare':'Commun'}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ================ NOTES ================
+function switchCarnetTab(tab, el) {
+  document.querySelectorAll('#page-carnet button[onclick^="switchCarnetTab"]').forEach(b => {
+    b.style.background = 'white'; b.style.color = 'var(--text-mid)';
+  });
+  el.style.background = 'var(--green-mid)'; el.style.color = 'white';
+  document.getElementById('carnet-notes').style.display = tab === 'notes' ? 'block' : 'none';
+  document.getElementById('carnet-checklist').style.display = tab === 'checklist' ? 'block' : 'none';
+  document.getElementById('carnet-urgences').style.display = tab === 'urgences' ? 'block' : 'none';
+}
+
+function addNote() {
+  const input = document.getElementById('note-input');
+  const text = input.value.trim();
+  if (!text) return;
+  notes.unshift({ text, date: new Date().toLocaleDateString('fr-FR', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' }) });
+  localStorage.setItem('mw-notes', JSON.stringify(notes));
+  input.value = '';
+  renderNotes();
+}
+
+function renderNotes() {
+  const list = document.getElementById('notes-list');
+  if (!notes.length) {
+    list.innerHTML = '<p style="text-align:center;color:var(--text-light);font-size:14px;padding:20px;">Aucune note pour le moment</p>';
+    return;
+  }
+  list.innerHTML = notes.map((n, i) => `
+    <div class="note-item">
+      <button class="note-del" onclick="deleteNote(${i})">✕</button>
+      <div class="note-date">${n.date}</div>
+      <div class="note-text">${n.text}</div>
+    </div>
+  `).join('');
+}
+
+function deleteNote(i) {
+  notes.splice(i, 1);
+  localStorage.setItem('mw-notes', JSON.stringify(notes));
+  renderNotes();
+}
+
+// ================ CHECKLIST ================
+function renderChecklist(mode) {
+  const container = document.getElementById(mode === 'full' ? 'checklist-full' : 'quick-checks');
+  let html = '';
+  const cats = mode === 'quick' ? ['Équipement randonnée'] : Object.keys(CHECKLIST);
+  cats.forEach(cat => {
+    html += `<div class="check-section"><div class="check-title">${cat}</div>`;
+    const items = mode === 'quick' ? CHECKLIST[cat].slice(0,3) : CHECKLIST[cat];
+    items.forEach(item => {
+      const key = btoa(item);
+      const done = checks[key];
+      html += `
+        <div class="check-item ${done ? 'done' : ''}" onclick="toggleCheck('${key}', this)">
+          <div class="check-box"></div>
+          <span class="check-label">${item}</span>
+        </div>
+      `;
+    });
+    html += '</div>';
+  });
+  if (container) container.innerHTML = html;
+}
+
+function toggleCheck(key, el) {
+  checks[key] = !checks[key];
+  localStorage.setItem('mw-checks', JSON.stringify(checks));
+  el.classList.toggle('done', checks[key]);
+}
+
+function renderQuickChecks() { renderChecklist('quick'); }
+
+// ================ URGENCES ================
+function renderUrgences() {
+  document.getElementById('urgences-list').innerHTML = URGENCES.map(u => `
+    <div class="urgence-card">
+      <div class="urgence-icon ${u.color}">${u.emoji}</div>
+      <div>
+        <div class="urgence-name">${u.name}</div>
+        <div class="urgence-num">${u.num}</div>
+      </div>
+      <a href="tel:${u.num.replace(/\s/g,'')}" class="call-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013 7.82 19.79 19.79 0 01-.1 3.21 2 2 0 014.11 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+        </svg>
+      </a>
+    </div>
+  `).join('');
+}
+
+// ================ MODALS ================
+function openModal(id) {
+  const data = MODAL_DATA[id];
+  if (!data) return;
+  document.getElementById('modal-body').innerHTML = `
+    <span class="modal-emoji">${data.emoji}</span>
+    <div class="modal-title">${data.title}</div>
+    <div class="modal-subtitle">${data.subtitle}</div>
+    <div class="info-grid">
+      ${data.infos.map(i => `<div class="info-cell"><div class="info-cell-label">${i.label}</div><div class="info-cell-val">${i.val}</div></div>`).join('')}
+    </div>
+    <div class="modal-desc">${data.desc}</div>
+    <div style="font-size:13px;font-weight:700;color:var(--text-mid);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">💡 Conseils pratiques</div>
+    <ul class="tips-list">
+      ${data.tips.map(t => `<li><span style="margin-right:6px;">→</span>${t}</li>`).join('')}
+    </ul>
+  `;
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function openTrailModal(id) {
+  const t = TRAILS.find(x => x.id === id);
+  if (!t) return;
+  document.getElementById('modal-body').innerHTML = `
+    <span class="modal-emoji">${t.icon}</span>
+    <div class="modal-title">${t.name}</div>
+    <div class="modal-subtitle">${t.region} · ${t.dist} · ${t.duration}</div>
+    <div class="info-grid">
+      <div class="info-cell"><div class="info-cell-label">Distance</div><div class="info-cell-val">${t.dist}</div></div>
+      <div class="info-cell"><div class="info-cell-label">Durée</div><div class="info-cell-val">${t.duration}</div></div>
+      <div class="info-cell"><div class="info-cell-label">Dénivelé</div><div class="info-cell-val">+${t.elev}</div></div>
+      <div class="info-cell"><div class="info-cell-label">Difficulté</div><div class="info-cell-val">${t.diff==='easy'?'Facile':t.diff==='med'?'Moyen':'Difficile'}</div></div>
+    </div>
+    <div class="modal-desc">${t.desc}</div>
+    <div style="font-size:13px;font-weight:700;color:var(--text-mid);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">💡 Conseils</div>
+    <ul class="tips-list">
+      ${t.tips.map(tip => `<li><span style="margin-right:6px;">→</span>${tip}</li>`).join('')}
+    </ul>
+  `;
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function openSpeciesModal(name) {
+  const all = [...SPECIES.flore, ...SPECIES.faune, ...SPECIES.oiseaux];
+  const s = all.find(x => x.name === name);
+  if (!s) return;
+  document.getElementById('modal-body').innerHTML = `
+    <div style="font-size:72px;text-align:center;margin-bottom:12px;">${s.emoji}</div>
+    <div class="modal-title">${s.name}</div>
+    <div class="modal-subtitle" style="font-style:italic;">${s.latin}</div>
+    <span class="species-tag tag-${s.tag}" style="margin-bottom:16px;display:inline-block;font-size:13px;">${s.tag==='endemic'?'Endémique de Madère':s.tag==='rare'?'Espèce rare — protégée':'Espèce commune'}</span>
+    <div class="modal-desc">
+      ${s.tag === 'endemic' ? 'Cette espèce est <strong>endémique de Madère</strong> — elle ne se trouve nulle part ailleurs dans le monde. Sa présence est un témoignage vivant de l\'isolement géologique de l\'île depuis des millions d\'années.' : s.tag === 'rare' ? 'Cette espèce est classée comme <strong>vulnérable ou menacée</strong>. Si vous avez la chance de l\'observer, gardez vos distances et ne perturbez pas son habitat.' : 'Espèce régulièrement observée sur l\'île de Madère, souvent dans les jardins, forêts et zones côtières.'}
+    </div>
+    <div style="background:var(--green-dark);border-radius:12px;padding:14px;color:white;font-size:13px;line-height:1.6;">
+      🔍 <strong>Où l'observer ?</strong><br>
+      ${s.tag === 'endemic' ? 'Forêt Laurissilva, sentiers des levadas, zones protégées du Parc Naturel de Madère.' : 'Toute l\'île — jardins botaniques, parcs, littoral et zones forestières.'}
+    </div>
+  `;
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeModalIfOverlay(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+// ================ GPS ================
+function locateMe() {
+  if (!navigator.geolocation) {
+    alert('Géolocalisation non disponible sur cet appareil');
+    return;
+  }
+  const btn = document.querySelector('.gps-btn');
+  btn.style.background = 'var(--gold)';
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      btn.style.background = 'var(--green-light)';
+      const { latitude, longitude } = pos.coords;
+      alert(`📍 Votre position :\nLat: ${latitude.toFixed(4)}\nLng: ${longitude.toFixed(4)}\n\nMadère est entre 32.6°N–33°N, 16.8°W–17.3°W`);
+    },
+    err => {
+      btn.style.background = 'var(--coral)';
+      alert('Impossible de récupérer votre position. Vérifiez les permissions GPS.');
+    },
+    { enableHighAccuracy: true, timeout: 8000 }
+  );
+}
+
+// ================ OFFLINE ================
+function setupOffline() {
+  window.addEventListener('online', () => document.body.classList.remove('offline'));
+  window.addEventListener('offline', () => document.body.classList.add('offline'));
+  if (!navigator.onLine) document.body.classList.add('offline');
+}
+
+// ================ PWA INSTALL ================
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('install-banner').classList.add('show');
+});
+
+document.getElementById('btn-install-app').addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  document.getElementById('install-banner').classList.remove('show');
+});
+
+function dismissInstall() {
+  document.getElementById('install-banner').classList.remove('show');
+}
+
+window.addEventListener('appinstalled', () => {
+  document.getElementById('install-banner').classList.remove('show');
+});
+
+// ================ SERVICE WORKER ================
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').then(reg => {
+    console.log('SW registered');
+  }).catch(err => console.log('SW error:', err));
+}
+</script>
+</body>
+</html>
